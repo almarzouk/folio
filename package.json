@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "npm run build && git add -A && git commit -m 'Auto deploy' && git push",
+    "update": "git add -A && git commit -m 'Update content' && git push",
+    "quick-push": "git add -A && git commit -m 'Quick update' && git push"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
