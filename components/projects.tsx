@@ -201,7 +201,7 @@ const projects = [
       "/projects/Mein Termin SAAS APP - Laravel - 4.png",
       "/projects/Mein Termin SAAS APP - Laravel - 5.png",
     ],
-    github: "#",
+    github: "https://github.com/almarzouk/termin/blob/main/README.md",
     live: "#",
     featured: true,
   },
