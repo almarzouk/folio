@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import postsData from "@/data/blog/posts.json";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Updated: 2025-11-30
   const baseUrl = "https://jumaa-portfolio.vercel.app";
 
   // Static pages
