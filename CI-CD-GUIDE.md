@@ -17,16 +17,19 @@ Builds the project, tests it, then deploys:
 ```
 
 **أو بدون رسالة (سيضع تاريخ ووقت تلقائياً):**
+
 ```bash
 ./deploy.sh
 ```
 
 **Example:**
+
 ```bash
 ./deploy.sh "Added new blog article about AI"
 ```
 
 **This will:**
+
 1. ✅ Build the project (`npm run build`)
 2. ✅ Add all changes to git
 3. ✅ Commit with your message
@@ -44,6 +47,7 @@ For content changes only (no build check):
 ```
 
 **Example:**
+
 ```bash
 ./quick-update.sh "Fixed typo in blog"
 ```
@@ -94,6 +98,7 @@ git push
 1. Edit `data/blog/posts.json`
 2. Add your article
 3. Deploy:
+
 ```bash
 ./deploy.sh "Added new article: React vs Vue"
 ```
@@ -103,6 +108,7 @@ git push
 1. Add images to `public/projects/`
 2. Update `components/projects.tsx`
 3. Deploy:
+
 ```bash
 ./deploy.sh "Updated project images"
 ```
@@ -111,6 +117,7 @@ git push
 
 1. Edit any content file
 2. Quick update:
+
 ```bash
 ./quick-update.sh "Updated about section"
 ```
@@ -119,6 +126,7 @@ git push
 
 1. Edit CSS/components
 2. Full deploy (with build test):
+
 ```bash
 ./deploy.sh "Redesigned hero section"
 ```
@@ -182,6 +190,7 @@ GitHub may require a **Personal Access Token**:
 5. Use token as password when prompted
 
 Or configure credential helper:
+
 ```bash
 git config --global credential.helper osxkeychain
 ```
@@ -208,12 +217,14 @@ git config --global credential.helper osxkeychain
 ## 🎯 Best Practices
 
 ### ✅ **DO:**
+
 - Use `./deploy.sh` for important changes (tests build)
 - Write descriptive commit messages
 - Test locally before deploying (`npm run build`)
 - Deploy frequently (small changes)
 
 ### ❌ **DON'T:**
+
 - Don't commit `.env.local` (already in .gitignore)
 - Don't deploy broken code
 - Don't use generic messages like "update"
@@ -224,9 +235,11 @@ git config --global credential.helper osxkeychain
 ## 🔐 Environment Variables
 
 Already configured on Vercel:
+
 - ✅ `NEXT_PUBLIC_GA_MEASUREMENT_ID` = `G-3FPJQHZ97M`
 
 To add more:
+
 ```bash
 # Via Vercel Dashboard
 Vercel → Project → Settings → Environment Variables
@@ -283,13 +296,14 @@ git remote -v
 ✅ **SSL Certificate** - Automatic  
 ✅ **Cache Invalidation** - Automatic  
 ✅ **Preview Deployments** - For branches  
-✅ **Rollback** - One click on Vercel  
+✅ **Rollback** - One click on Vercel
 
 ---
 
 ## 🎉 You're All Set!
 
 Now you can:
+
 1. Make changes locally
 2. Run `./deploy.sh "what you changed"`
 3. Wait 1-2 minutes
@@ -300,6 +314,7 @@ Now you can:
 ---
 
 **Need help?**
+
 - Check Vercel logs for deployment issues
 - Run `npm run build` locally to test
 - Check GitHub for push confirmation

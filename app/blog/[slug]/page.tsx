@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { BlogPostingSchema } from "@/components/json-ld";
 
 // Import blog posts
 import postsData from "@/data/blog/posts.json";
@@ -60,8 +61,17 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     .filter((p) => p.category === post.category && p.slug !== post.slug)
     .slice(0, 3);
 
+  const postUrl = `jumaa-portfolio.vercel.app/blog/${post.slug}`;
+
   return (
     <Fragment>
+      <BlogPostingSchema
+        title={post.title}
+        description={post.excerpt}
+        author={post.author}
+        datePublished={post.date}
+        url={postUrl}
+      />
       <Header />
       <div className="min-h-screen pt-20">
         {/* Back Button */}
