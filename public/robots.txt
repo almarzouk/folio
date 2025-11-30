@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: jumaa-portfolio.vercel.app
+Host: https://folio-pi-eight.vercel.app
 
 # Sitemap
-Sitemap: jumaa-portfolio.vercel.app/sitemap.xml
+Sitemap: https://folio-pi-eight.vercel.app/sitemap.xml
