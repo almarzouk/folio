@@ -109,10 +109,27 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-border py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground text-center sm:text-left">
-              © {new Date().getFullYear()} Jumaa Almarzouk. Alle Rechte
-              vorbehalten.
-            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+              <p className="text-sm text-muted-foreground text-center sm:text-left">
+                © {new Date().getFullYear()} Jumaa Almarzouk. Alle Rechte
+                vorbehalten.
+              </p>
+              <div className="flex items-center gap-3 text-sm">
+                <Link
+                  href="/impressum"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Impressum
+                </Link>
+                <span className="text-muted-foreground/50">•</span>
+                <Link
+                  href="/datenschutz"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Datenschutz
+                </Link>
+              </div>
+            </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               Entwickelt mit{" "}
               <Heart className="h-4 w-4 text-red-500 fill-current" /> und{" "}
