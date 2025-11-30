@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import postsData from "@/data/blog/posts.json";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://folio-pi-eight.vercel.app";
+  const baseUrl = "https://jumaa-portfolio.vercel.app";
 
   // Static pages
   const staticPages = [
