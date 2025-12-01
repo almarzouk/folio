@@ -220,7 +220,7 @@ const projects = [
       "/projects/Job Portal Laravel - 4.png",
       "/projects/Job Portal Laravel - 5.png",
     ],
-    github: "https://github.com/almarzouk/php-job-portal",
+    github: "https://github.com/almarzouk/my-jobs",
     live: "#",
     featured: true,
   },
