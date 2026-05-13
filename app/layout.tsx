@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import GoogleAnalytics from "@/components/google-analytics";
+import { LangHtml } from "@/components/lang-html";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,53 +11,46 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Jumaa Almarzouk | Fullstack Webentwickler",
+  metadataBase: new URL("https://jumaa-portfolio.vercel.app"),
+  title: {
+    default: "Jumaa Almarzouk | Fullstack-Webentwickler",
+    template: "%s",
+  },
   description:
-    "Portfolio von Jumaa Almarzouk - Fullstack Webentwickler mit Fokus auf React, Next.js, WordPress und moderne Webtechnologien. Standort: Haselünne, Deutschland.",
+    "Portfolio von Jumaa Almarzouk — Fullstack-Webentwickler (React, Next.js, WordPress). Standort: Haselünne, Deutschland.",
   keywords: [
     "Fullstack Entwickler",
     "Webentwickler",
     "React",
     "Next.js",
     "WordPress",
-    "PHP",
-    "Node.js",
-    "Deutschland",
+    "Stellensuche",
+    "Festanstellung",
     "Haselünne",
-    "Emsland",
-    "Web Developer",
-    "Frontend Developer",
-    "Backend Developer",
+    "Deutschland",
   ],
   authors: [{ name: "Jumaa Almarzouk" }],
   creator: "Jumaa Almarzouk",
   publisher: "Jumaa Almarzouk",
-  metadataBase: new URL("https://jumaa-portfolio.vercel.app"),
   alternates: {
-    canonical: "/",
+    canonical: "/de",
+    languages: { de: "/de", en: "/en", "x-default": "/de" },
   },
   openGraph: {
-    title: "Jumaa Almarzouk | Fullstack Webentwickler",
-    description:
-      "Portfolio von Jumaa Almarzouk - Fullstack Webentwickler mit Fokus auf React, Next.js, WordPress und moderne Webtechnologien.",
-    url: "https://jumaa-portfolio.vercel.app",
-    siteName: "Jumaa Almarzouk Portfolio",
-    locale: "de_DE",
+    siteName: "Jumaa Almarzouk",
     type: "website",
+    locale: "de_DE",
     images: [
       {
         url: "/og-image",
         width: 1200,
         height: 630,
-        alt: "Jumaa Almarzouk - Fullstack Webentwickler",
+        alt: "Jumaa Almarzouk",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jumaa Almarzouk | Fullstack Webentwickler",
-    description:
-      "Portfolio von Jumaa Almarzouk - Fullstack Webentwickler mit Fokus auf React, Next.js und WordPress.",
     images: ["/og-image"],
   },
   robots: {
@@ -79,12 +73,7 @@ export const metadata: Metadata = {
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/safari-pinned-tab.svg",
-      },
-    ],
+    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg" }],
   },
   manifest: "/site.webmanifest",
 };
@@ -97,6 +86,7 @@ export default function RootLayout({
   return (
     <html lang="de" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
+        <LangHtml />
         <GoogleAnalytics />
         <ThemeProvider
           attribute="class"

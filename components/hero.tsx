@@ -1,148 +1,281 @@
 "use client";
 
-import { ArrowRight, Download, Github, Linkedin, Mail } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Download,
+  Github,
+  Linkedin,
+  Mail,
+  MapPin,
+  Rocket,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { useI18n } from "@/components/i18n-provider";
+import { withLocale } from "@/lib/i18n/paths";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
+};
+
+const imageVariants = {
+  hidden: { opacity: 0, scale: 0.92 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      delay: 0.08,
+    },
+  },
+};
 
 export default function Hero() {
+  const { locale, messages: m } = useI18n();
+  const home = withLocale(locale, "/");
+
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16"
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-primary/5 -z-10" />
+      <div className="absolute inset-0 -z-10 dot-pattern opacity-50" />
+      <div className="absolute inset-0 -z-10 grid-pattern opacity-25" />
 
-      {/* Animated circles */}
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse delay-1000 -z-10" />
+      <motion.div
+        className="absolute left-1/4 top-1/4 -z-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl"
+        animate={{ scale: [1, 1.08, 1], x: [0, 12, 0], y: [0, -10, 0] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 -z-10 h-80 w-80 rounded-full bg-primary/8 blur-3xl"
+        animate={{ scale: [1, 1.1, 1], x: [0, -16, 0], y: [0, 14, 0] }}
+        transition={{
+          duration: 11,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.6,
+        }}
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Text Content */}
-            <div className="space-y-8 text-center lg:text-left order-2 lg:order-1">
-              {/* Greeting */}
-              <div className="animate-fadeInUp">
-                <p className="text-sm sm:text-base font-medium text-primary mb-2">
-                  Hallo, ich bin
-                </p>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground">
-                  Jumaa Almarzouk
-                </h1>
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-16">
+          <motion.div
+            className="order-2 space-y-7 text-center lg:order-1 lg:text-left"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div variants={itemVariants}>
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-3.5 py-1.5 text-xs font-medium text-primary sm:text-sm">
+                <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                {m.hero.badge}
+              </span>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground sm:text-sm">
+                {m.hero.greeting}
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+                <span className="text-primary">Jumaa</span>
+                <br />
+                <span className="text-foreground">Almarzouk</span>
+              </h1>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <h2 className="text-xl font-semibold text-foreground/85 sm:text-2xl md:text-3xl">
+                {m.hero.roleLine}{" "}
+                <span className="font-bold text-primary">
+                  {m.hero.roleHighlight}
+                </span>
+              </h2>
+              <div className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
+                {m.hero.techTags.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-full border border-primary/20 bg-primary/[0.07] px-2.5 py-0.5 text-xs font-semibold text-primary"
+                  >
+                    {tech}
+                  </span>
+                ))}
               </div>
+            </motion.div>
 
-              {/* Title */}
-              <div className="animate-fadeInUp delay-100">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground/90">
-                  Fullstack Webentwickler
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground mt-4">
-                  mit Fokus auf{" "}
-                  <span className="text-primary font-medium">React</span>,{" "}
-                  <span className="text-primary font-medium">Next.js</span> und{" "}
-                  <span className="text-primary font-medium">WordPress</span>
-                </p>
-              </div>
+            <motion.p
+              variants={itemVariants}
+              className="mx-auto max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0"
+            >
+              {m.hero.bio}
+            </motion.p>
 
-              {/* Description */}
-              <div className="animate-fadeInUp delay-200">
-                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                  Ich entwickle moderne, performante und benutzerfreundliche
-                  Webanwendungen. Von der Konzeption bis zur Umsetzung – ich
-                  bringe Ihre digitalen Projekte zum Leben.
-                </p>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 animate-fadeInUp delay-300">
-                <Button asChild size="lg" className="group">
-                  <Link href="#projects">
-                    Projekte ansehen
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <Link href="#contact">
-                    <Mail className="mr-2 h-4 w-4" />
-                    Kontakt aufnehmen
-                  </Link>
-                </Button>
-                <Button variant="outline" size="lg" asChild>
-                  <a href="/cv/Jumaa-Almarzouk-CV.pdf" download>
-                    <Download className="mr-2 h-4 w-4" />
-                    Lebenslauf (PDF)
-                  </a>
-                </Button>
-              </div>
-
-              {/* Social Links */}
-              <div className="flex items-center justify-center lg:justify-start gap-4 pt-4 animate-fadeInUp delay-400">
-                <Link
-                  href="https://github.com/almarzouk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  <Github className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col items-center justify-center gap-2.5 sm:flex-row sm:flex-wrap lg:justify-start"
+            >
+              <Button
+                asChild
+                size="lg"
+                className="btn-primary group w-full rounded-xl px-6 shadow-md transition-transform hover:scale-[1.02] active:scale-100 sm:w-auto"
+              >
+                <Link href={`${home}#projects`}>
+                  <span className="flex items-center gap-2">
+                    {m.hero.ctaProjects}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
                 </Link>
-                <Link
-                  href="https://linkedin.com/in/almarzouk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  <Linkedin className="h-5 w-5" />
-                  <span className="sr-only">LinkedIn</span>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="w-full rounded-xl border-2 px-6 transition-transform hover:scale-[1.02] active:scale-100 sm:w-auto"
+              >
+                <Link href={`${home}#contact`}>
+                  <Mail className="mr-2 h-4 w-4" />
+                  {m.hero.ctaContact}
                 </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                asChild
+                className="w-full rounded-xl border-2 px-6 transition-transform hover:scale-[1.02] active:scale-100 sm:w-auto"
+              >
+                <a href="/cv/Jumaa-Almarzouk-CV.pdf" download>
+                  <Download className="mr-2 h-4 w-4" />
+                  {m.hero.cvDownload}
+                </a>
+              </Button>
+            </motion.div>
+
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-wrap items-center justify-center gap-2 pt-1 lg:justify-start"
+            >
+              {[
+                {
+                  href: "https://github.com/almarzouk",
+                  icon: Github,
+                  label: "GitHub",
+                },
+                {
+                  href: "https://linkedin.com/in/almarzouk",
+                  icon: Linkedin,
+                  label: "LinkedIn",
+                },
+                {
+                  href: "mailto:jumaa.almarzouk@gmail.com",
+                  icon: Mail,
+                  label: "E-Mail",
+                },
+              ].map(({ href, icon: Icon, label }) => (
                 <Link
-                  href="mailto:jumaa.almarzouk@gmail.com"
-                  className="p-3 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    href.startsWith("http") ? "noopener noreferrer" : undefined
+                  }
+                  className="rounded-xl border border-border bg-card p-2.5 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
                 >
-                  <Mail className="h-5 w-5" />
-                  <span className="sr-only">E-Mail</span>
+                  <Icon className="h-5 w-5" />
+                  <span className="sr-only">{label}</span>
                 </Link>
+              ))}
+              <span className="inline-flex items-center gap-1.5 pl-1 text-sm text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 text-primary/70" />
+                Haselünne, DE
+              </span>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="order-1 flex justify-center lg:order-2"
+            variants={imageVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <div className="relative h-64 w-64 sm:h-72 sm:w-72 lg:h-[340px] lg:w-[340px]">
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary/25" />
+              <div className="absolute inset-3 rounded-full border border-primary/35" />
+
+              <div className="absolute inset-6 rounded-full bg-primary/[0.08] animate-pulse-glow" />
+
+              <div className="absolute inset-8 overflow-hidden rounded-full border-2 border-primary/40 bg-secondary shadow-xl ring-4 ring-primary/10">
+                <Image
+                  src="/photo.png"
+                  alt="Jumaa Almarzouk"
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
 
-              {/* Location */}
-              <div className="animate-fadeInUp delay-500">
-                <p className="text-sm text-muted-foreground">
-                  📍 Haselünne, Emsland • Deutschland
-                </p>
-              </div>
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -right-2 -top-2 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-md"
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/12">
+                  <Zap className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+                </span>
+                <span className="text-xs font-semibold text-foreground">
+                  {m.hero.expBadge}
+                </span>
+              </motion.div>
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+                className="absolute -bottom-2 -left-2 flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 shadow-md"
+              >
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/12">
+                  <Rocket className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
+                </span>
+                <span className="text-xs font-semibold text-foreground">
+                  {m.hero.projectsBadge}
+                </span>
+              </motion.div>
             </div>
-
-            {/* Right Side - Profile Image */}
-            <div className="flex justify-center items-center order-1 lg:order-2 animate-fadeInUp delay-100">
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-                {/* Decorative rings */}
-                <div className="absolute inset-0 rounded-full bg-primary/20 animate-pulse" />
-                <div className="absolute inset-4 rounded-full bg-primary/10 animate-pulse delay-300" />
-
-                {/* Profile Image Container */}
-                <div className="absolute inset-8 rounded-full overflow-hidden border-4 border-primary/50 shadow-2xl bg-secondary">
-                  <Image
-                    src="/photo.png"
-                    alt="Jumaa Almarzouk"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 rounded-full border-2 border-primary/50 flex items-start justify-center p-2">
-          <div className="w-1.5 h-3 bg-primary rounded-full" />
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 6, 0] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      >
+          <div className="flex h-9 w-6 items-start justify-center rounded-full border-2 border-primary/35 pt-2">
+          <div className="h-2 w-0.5 rounded-full bg-primary" />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

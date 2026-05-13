@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { motion } from "framer-motion";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
@@ -14,8 +14,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/components/i18n-provider";
 
 export default function Contact() {
+  const { locale, messages: m } = useI18n();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,50 +31,46 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const autoresponse = `${m.contact.autoresponseThanks}, ${formData.name}!
+
+${m.contact.autoresponseReceived}
+
+${locale === "de" ? "Ihre Nachricht" : "Your message"}:
+"${formData.message}"
+
+${m.contact.autoresponseClosing},
+${m.contact.autoresponseSignature}
+
+---
+Haselünne, Germany
+jumaa.almarzouk@gmail.com
+https://linkedin.com/in/almarzouk
+https://github.com/almarzouk`;
+
     try {
       const response = await fetch("https://formspree.io/f/mrbnbbvo", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
           message: formData.message,
           _replyto: formData.email,
-          _subject: `📧 Portfolio Kontakt: ${formData.subject}`,
-          _autoresponse: `Vielen Dank für Ihre Nachricht, ${formData.name}!
-
-Ich habe Ihre Nachricht erhalten und werde mich so schnell wie möglich bei Ihnen melden.
-
-Ihre Nachricht:
-"${formData.message}"
-
-Mit freundlichen Grüßen,
-Jumaa Almarzouk
-Fullstack Webentwickler
-
----
-📍 Haselünne, Deutschland
-📧 jumaa.almarzouk@gmail.com
-🔗 LinkedIn: linkedin.com/in/almarzouk
-🔗 GitHub: github.com/almarzouk`,
+          _subject: `${m.contact.formSubjectPrefix} ${formData.subject}`,
+          _autoresponse: autoresponse,
         }),
       });
 
       if (response.ok) {
         setIsSubmitted(true);
         setFormData({ name: "", email: "", subject: "", message: "" });
-        setTimeout(() => {
-          setIsSubmitted(false);
-        }, 5000);
+        setTimeout(() => setIsSubmitted(false), 5000);
+      } else {
+        alert(m.contact.formError);
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert(
-        "Es gab einen Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut."
-      );
+    } catch {
+      alert(m.contact.formError);
     } finally {
       setIsSubmitting(false);
     }
@@ -81,222 +79,252 @@ Fullstack Webentwickler
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
-    <section id="contact" className="py-20 sm:py-24 lg:py-32">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Kontakt aufnehmen
+    <section
+      id="contact"
+      className="relative overflow-hidden py-20 sm:py-24 lg:py-28"
+    >
+      <div className="absolute inset-0 -z-10 dot-pattern opacity-35" />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{
+              duration: 0.55,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            }}
+            className="mb-12 text-center sm:mb-14"
+          >
+            <h2 className="mb-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+              {m.contact.title}{" "}
+              <span className="text-primary">{m.contact.titleAccent}</span>
             </h2>
-            <div className="w-20 h-1 bg-primary mx-auto rounded-full mb-4" />
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Sie haben ein Projekt im Kopf oder suchen einen Entwickler? Ich
-              freue mich auf Ihre Nachricht und antworte in der Regel innerhalb
-              von 24 Stunden.
+            <div
+              className="mx-auto mb-4 h-1 w-16 rounded-full"
+              style={{ background: "hsl(var(--primary))" }}
+            />
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+              {m.contact.subtitle}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Contact Information */}
-            <div className="space-y-6">
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-primary" />
-                    </div>
-                    E-Mail
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Link
-                    href="mailto:jumaa.almarzouk@gmail.com"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    jumaa.almarzouk@gmail.com
-                  </Link>
-                </CardContent>
-              </Card>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <motion.div
+              initial={{ opacity: 0, x: -18 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.55,
+                ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+              }}
+              className="space-y-3"
+            >
+              {[
+                {
+                  icon: Mail,
+                  title: m.contact.email,
+                  content: (
+                    <Link
+                      href="mailto:jumaa.almarzouk@gmail.com"
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      jumaa.almarzouk@gmail.com
+                    </Link>
+                  ),
+                },
+                {
+                  icon: MapPin,
+                  title: m.contact.location,
+                  content: (
+                    <p className="text-sm text-muted-foreground">
+                      Haselünne, Emsland
+                      <br />
+                      Germany
+                    </p>
+                  ),
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="glass-card card-hover flex gap-3 rounded-2xl border border-border p-4"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                    <item.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="mb-0.5 text-sm font-semibold">{item.title}</p>
+                    {item.content}
+                  </div>
+                </div>
+              ))}
 
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <MapPin className="w-5 h-5 text-primary" />
-                    </div>
-                    Standort
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    Haselünne, Emsland
-                    <br />
-                    Deutschland
+              <div className="glass-card rounded-2xl border border-border p-4">
+                <p className="mb-2 text-sm font-semibold">{m.contact.social}</p>
+                <div className="flex flex-col gap-2">
+                  {[
+                    {
+                      href: "https://github.com/almarzouk",
+                      Icon: Github,
+                      label: "GitHub",
+                    },
+                    {
+                      href: "https://linkedin.com/in/almarzouk",
+                      Icon: Linkedin,
+                      label: "LinkedIn",
+                    },
+                  ].map(({ href, Icon, label }) => (
+                    <Link
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary transition-colors group-hover:bg-primary/10">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <span className="text-sm font-medium">{label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card rounded-2xl border border-primary/20 bg-primary/[0.05] p-4">
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+                  <p className="text-sm font-semibold text-primary">
+                    {m.contact.availabilityTitle}
                   </p>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle>Social Media</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Link
-                    href="https://github.com/almarzouk"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors group"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-secondary group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-                      <Github className="w-5 h-5" />
-                    </div>
-                    <span>GitHub</span>
-                  </Link>
-                  <Link
-                    href="https://linkedin.com/in/almarzouk"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors group"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-secondary group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-                      <Linkedin className="w-5 h-5" />
-                    </div>
-                    <span>LinkedIn</span>
-                  </Link>
-                </CardContent>
-              </Card>
-
-              <div className="p-6 bg-primary/10 rounded-lg border border-border">
-                <h3 className="font-semibold mb-2">Verfügbarkeit</h3>
+                </div>
                 <p className="text-sm text-muted-foreground">
-                  Aktuell offen für neue Projekte und Festanstellungen.
-                  Bevorzugt Remote oder im Raum Niedersachsen.
+                  {m.contact.availabilityText}
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Contact Form */}
-            <div className="lg:col-span-2">
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-2xl">Nachricht senden</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isSubmitted ? (
-                    <div className="py-12 text-center">
-                      <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle2 className="w-8 h-8 text-green-500" />
-                      </div>
-                      <h3 className="text-xl font-semibold mb-2">
-                        Nachricht gesendet!
-                      </h3>
-                      <p className="text-muted-foreground">
-                        Vielen Dank für Ihre Nachricht. Ich melde mich so
-                        schnell wie möglich bei Ihnen.
-                      </p>
+            <motion.div
+              initial={{ opacity: 0, x: 18 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.55,
+                delay: 0.06,
+                ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+              }}
+              className="lg:col-span-2"
+            >
+              <div className="glass-card rounded-2xl border border-border p-6 shadow-lg sm:p-8">
+                <h3 className="mb-5 text-lg font-bold sm:text-xl">
+                  {m.contact.formTitle}
+                </h3>
+                {isSubmitted ? (
+                  <div className="py-10 text-center">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/12">
+                      <CheckCircle2 className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
                     </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="name"
-                            className="text-sm font-medium text-foreground"
-                          >
-                            Name *
-                          </label>
-                          <Input
-                            id="name"
-                            name="name"
-                            type="text"
-                            placeholder="Ihr Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="email"
-                            className="text-sm font-medium text-foreground"
-                          >
-                            E-Mail *
-                          </label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="ihre@email.de"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
+                    <h4 className="mb-2 text-lg font-semibold">
+                      {m.contact.successTitle}
+                    </h4>
+                    <p className="text-muted-foreground">{m.contact.successBody}</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                      <div className="space-y-1.5">
                         <label
-                          htmlFor="subject"
+                          htmlFor="name"
                           className="text-sm font-medium text-foreground"
                         >
-                          Betreff *
+                          {m.contact.name} *
                         </label>
                         <Input
-                          id="subject"
-                          name="subject"
+                          id="name"
+                          name="name"
                           type="text"
-                          placeholder="Worum geht es?"
-                          value={formData.subject}
+                          placeholder={m.contact.placeholders.name}
+                          value={formData.name}
                           onChange={handleChange}
                           required
                         />
                       </div>
-
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <label
-                          htmlFor="message"
+                          htmlFor="email"
                           className="text-sm font-medium text-foreground"
                         >
-                          Nachricht *
+                          {m.contact.emailLabel} *
                         </label>
-                        <Textarea
-                          id="message"
-                          name="message"
-                          placeholder="Erzählen Sie mir von Ihrem Projekt..."
-                          value={formData.message}
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder={m.contact.placeholders.email}
+                          value={formData.email}
                           onChange={handleChange}
                           required
-                          rows={6}
                         />
                       </div>
+                    </div>
 
-                      <Button
-                        type="submit"
-                        size="lg"
-                        className="w-full group"
-                        disabled={isSubmitting}
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="subject"
+                        className="text-sm font-medium text-foreground"
                       >
-                        <Send className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        {isSubmitting ? "Wird gesendet..." : "Nachricht senden"}
-                      </Button>
+                        {m.contact.subject} *
+                      </label>
+                      <Input
+                        id="subject"
+                        name="subject"
+                        type="text"
+                        placeholder={m.contact.placeholders.subject}
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
 
-                      <p className="text-xs text-muted-foreground text-center">
-                        * Pflichtfelder. Ihre Daten werden vertraulich behandelt
-                        und nicht an Dritte weitergegeben.
-                      </p>
-                    </form>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="message"
+                        className="text-sm font-medium text-foreground"
+                      >
+                        {m.contact.message} *
+                      </label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        placeholder={m.contact.placeholders.message}
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                        rows={6}
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full rounded-xl btn-primary shadow-md"
+                      disabled={isSubmitting}
+                    >
+                      <Send className="mr-2 h-4 w-4" />
+                      {isSubmitting ? m.contact.submitting : m.contact.submit}
+                    </Button>
+
+                    <p className="text-center text-xs text-muted-foreground">
+                      * {m.contact.privacyNote}
+                    </p>
+                  </form>
+                )}
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

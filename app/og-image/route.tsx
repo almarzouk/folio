@@ -14,12 +14,8 @@ export async function GET() {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#0f172a",
-          backgroundImage:
-            "radial-gradient(circle at 25px 25px, #1e40af 2%, transparent 0%), radial-gradient(circle at 75px 75px, #3b82f6 2%, transparent 0%)",
-          backgroundSize: "100px 100px",
         }}
       >
-        {/* Main Content */}
         <div
           style={{
             display: "flex",
@@ -27,60 +23,56 @@ export async function GET() {
             alignItems: "center",
             justifyContent: "center",
             padding: "80px",
-            backgroundColor: "rgba(15, 23, 42, 0.8)",
-            borderRadius: "40px",
-            border: "4px solid #3b82f6",
+            backgroundColor: "rgba(15, 23, 42, 0.95)",
+            borderRadius: "32px",
+            border: "4px solid #2563eb",
           }}
         >
-          {/* Logo */}
           <div
             style={{
               display: "flex",
               width: "120px",
               height: "120px",
-              borderRadius: "30px",
-              backgroundColor: "#3b82f6",
+              borderRadius: "28px",
+              backgroundColor: "#2563eb",
               alignItems: "center",
               justifyContent: "center",
               fontSize: "64px",
               fontWeight: "bold",
               color: "white",
-              marginBottom: "40px",
+              marginBottom: "36px",
             }}
           >
             JA
           </div>
 
-          {/* Name */}
           <div
             style={{
-              fontSize: "72px",
+              fontSize: "68px",
               fontWeight: "bold",
               color: "white",
-              marginBottom: "20px",
+              marginBottom: "16px",
               textAlign: "center",
             }}
           >
             Jumaa Almarzouk
           </div>
 
-          {/* Title */}
           <div
             style={{
-              fontSize: "42px",
+              fontSize: "40px",
               color: "#93c5fd",
-              marginBottom: "30px",
+              marginBottom: "28px",
               textAlign: "center",
             }}
           >
             Fullstack Webentwickler
           </div>
 
-          {/* Technologies */}
           <div
             style={{
               display: "flex",
-              gap: "20px",
+              gap: "18px",
               flexWrap: "wrap",
               justifyContent: "center",
             }}
@@ -89,12 +81,12 @@ export async function GET() {
               <div
                 key={tech}
                 style={{
-                  padding: "12px 24px",
-                  backgroundColor: "rgba(59, 130, 246, 0.2)",
-                  border: "2px solid #3b82f6",
-                  borderRadius: "12px",
-                  color: "#60a5fa",
-                  fontSize: "28px",
+                  padding: "10px 22px",
+                  backgroundColor: "rgba(37, 99, 235, 0.2)",
+                  border: "2px solid #2563eb",
+                  borderRadius: "10px",
+                  color: "#bfdbfe",
+                  fontSize: "26px",
                   fontWeight: "600",
                 }}
               >
@@ -103,17 +95,14 @@ export async function GET() {
             ))}
           </div>
 
-          {/* Location */}
           <div
             style={{
-              marginTop: "40px",
+              marginTop: "36px",
               fontSize: "24px",
               color: "#94a3b8",
-              display: "flex",
-              alignItems: "center",
             }}
           >
-            📍 Haselünne, Deutschland
+            Haselünne · Deutschland
           </div>
         </div>
       </div>

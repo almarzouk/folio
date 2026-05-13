@@ -8,7 +8,13 @@
     "author": "Jumaa Almarzouk",
     "date": "2024-11-15",
     "category": "Frontend Development",
-    "tags": ["React", "Next.js", "JavaScript", "Web Development", "Framework"],
+    "tags": [
+      "React",
+      "Next.js",
+      "JavaScript",
+      "Web Development",
+      "Framework"
+    ],
     "readTime": "12 min"
   },
   {
@@ -20,7 +26,13 @@
     "author": "Jumaa Almarzouk",
     "date": "2024-11-10",
     "category": "Backend Development",
-    "tags": ["PHP", "Laravel", "Backend", "Framework", "Web Development"],
+    "tags": [
+      "PHP",
+      "Laravel",
+      "Backend",
+      "Framework",
+      "Web Development"
+    ],
     "readTime": "15 min"
   },
   {
@@ -32,7 +44,13 @@
     "author": "Jumaa Almarzouk",
     "date": "2024-11-05",
     "category": "Backend Development",
-    "tags": ["Symfony", "Laravel", "PHP", "Framework", "Enterprise"],
+    "tags": [
+      "Symfony",
+      "Laravel",
+      "PHP",
+      "Framework",
+      "Enterprise"
+    ],
     "readTime": "18 min"
   },
   {
@@ -63,7 +81,99 @@
     "author": "Jumaa Almarzouk",
     "date": "2024-11-18",
     "category": "Künstliche Intelligenz",
-    "tags": ["ChatGPT", "AI", "Productivity", "Development Tools", "Learning"],
+    "tags": [
+      "ChatGPT",
+      "AI",
+      "Productivity",
+      "Development Tools",
+      "Learning"
+    ],
     "readTime": "22 min"
+  },
+  {
+    "id": 6,
+    "slug": "laravel-queues-und-jobs-praxis",
+    "title": "Laravel: Queues, Jobs & Horizon — praktischer Einstieg",
+    "excerpt": "Wann lohnt sich die Queue? Redis vs. database, retries, idempotenz und typische Fallstricke bei Mailings und Reports.",
+    "content": "## Warum Queues?\n\nLange Requests blockieren PHP-FPM und schlechte UX. Mit Queues verschieben Sie Arbeit (E-Mails, PDFs, Webhooks) in den Hintergrund.\n\n## Setup in Kürze\n\nKonfiguration `QUEUE_CONNECTION=database` oder `redis` für Production. Job-Klassen implementieren `handle()` und Exceptions sauber loggen.\n\n## Retries & Idempotenz\n\nSetzen Sie `$tries` und Backoff. Wichtig: Jobs müssen bei Wiederholung keine doppelten Zahlungen oder doppelten Einträge erzeugen — nutzen Sie Locks oder eindeutige Business-Keys.\n\n## Horizon\n\nMit Laravel Horizon überwachen Sie Redis-Queues, Throughput und failed Jobs — ideal für Teams mit SLA.\n\n## Fazit\n\nQueues sind Standard für robuste Laravel-Apps. Starten Sie mit einem klaren Event-Modell und messen Sie Latenzen, bevor Sie alles async schalten.",
+    "author": "Jumaa Almarzouk",
+    "date": "2025-02-12",
+    "category": "Laravel",
+    "tags": [
+      "Laravel",
+      "PHP",
+      "Queues",
+      "Redis",
+      "Backend"
+    ],
+    "readTime": "6 min"
+  },
+  {
+    "id": 7,
+    "slug": "ki-code-agenten-2025",
+    "title": "KI-Code-Agenten: was sich 2025 für Teams ändert",
+    "excerpt": "Zwischen Autocomplete und autonomen Agenten — wie ich Werkzeuge einordne, Risiken sehe und Qualität sicherstelle.",
+    "content": "## Spektrum der Hilfe\n\nVon Vorschlägen in der IDE bis zu Agenten, die mehrere Dateien anfassen. Je mächtiger das Tool, desto wichtiger sind Reviews und Tests.\n\n## Qualität statt Tempo\n\nKI beschleunigt Boilerplate, nicht Architektur. Klare Module, Reviews und CI bleiben Pflicht — die KI ersetzt keine Verantwortung für Sicherheit und Datenhaltung.\n\n## Datenschutz\n\nKeine Secrets in Prompts. Für Firmencode: Enterprise-Tarife und klare Datenflüsse prüfen.\n\n## Fazit\n\nKI ist ein Multiplikator für erfahrene Entwickler — kein Ersatz für saubere Anforderungen und sauberen Release-Prozess.",
+    "author": "Jumaa Almarzouk",
+    "date": "2025-03-01",
+    "category": "KI & Tools",
+    "tags": [
+      "KI",
+      "AI",
+      "Developer Experience",
+      "Team"
+    ],
+    "readTime": "5 min"
+  },
+  {
+    "id": 8,
+    "slug": "claude-code-im-alltag",
+    "title": "Claude Code im Alltag: Workflow & Grenzen",
+    "excerpt": "So nutze ich Anthropic Claude im Editor-Setup — Kontext, Refactors und wann ich lieber klassisch debugge.",
+    "content": "## Kontext führen\n\nKurze, präzise Prompts mit Dateipfaden und erwartetem Verhalten schlagen lange Monologe. Ich teile relevante Ausschnitte statt ganzer Repos.\n\n## Refactoring\n\nUmbenennungen über mehrere Dateien funktionieren gut, wenn die Struktur klar ist. Danach immer bauen und Tests laufen lassen.\n\n## Grenzen\n\nFramework-Details ändern sich schnell — Release Notes der Bibliothek bleiben die Quelle der Wahrheit.\n\n## Fazit\n\nClaude Code ist stark für Erklärungen und mittlere Refactors; Ownership und Tests bleiben beim Menschen.",
+    "author": "Jumaa Almarzouk",
+    "date": "2025-03-18",
+    "category": "DevTools",
+    "tags": [
+      "Claude",
+      "Anthropic",
+      "IDE",
+      "Refactoring"
+    ],
+    "readTime": "5 min"
+  },
+  {
+    "id": 9,
+    "slug": "github-copilot-praxis-tipps",
+    "title": "GitHub Copilot: Praxis-Tipps für sauberen Code",
+    "excerpt": "Tab-Completion, Tests und Security — wie ich Copilot produktiv einsetze ohne blind zu übernehmen.",
+    "content": "## Tab statt Paste\n\nIch nutze Vorschläge als Startpunkt und tippe weiter, damit der Stil zum Team passt. Kommentare als „Spec“ vor der Funktion verbessern die Trefferqualität.\n\n## Tests generieren\n\nCopilot kann Skelette für PHPUnit/Jest liefern — Edge Cases ergänze ich manuell. Grün werden lassen reicht nicht.\n\n## Security\n\nKeine API-Keys in Chat oder Inline-Hints. Bei Unsicherheit: offizielle Docs lesen.\n\n## Fazit\n\nCopilot spart Zeit bei wiederkehrendem Code — Review und Verständnis bleiben Pflicht.",
+    "author": "Jumaa Almarzouk",
+    "date": "2025-04-02",
+    "category": "DevTools",
+    "tags": [
+      "GitHub Copilot",
+      "VS Code",
+      "Productivity",
+      "Testing"
+    ],
+    "readTime": "5 min"
+  },
+  {
+    "id": 10,
+    "slug": "n8n-workflows-webhooks-apis",
+    "title": "n8n: Workflows zwischen Webhooks, APIs und CRM",
+    "excerpt": "Visuelle Automation ohne Vendor-Lock-in — typische Muster, Fehlerbehandlung und Self-Hosting vs. Cloud.",
+    "content": "## Warum n8n?\n\nSelf-hosted Automation mit vielen Nodes für SaaS-APIs. Gut für Prototypen und mittlere Integrationslast.\n\n## Muster\n\nWebhook empfängt Event → validieren → Mapping → CRM/Slack/E-Mail. Immer Idempotenz-Keys setzen, wenn Provider Retries schicken.\n\n## Fehlerbehandlung\n\nError-Workflows und Alerts, sonst merkt niemand stillschweigend fehlgeschlagene Runs.\n\n## Betrieb\n\nUpdates, Backups und Secrets-Management nicht vergessen. Für Compliance oft besser als unkontrollierte Zapier-Ketten.\n\n## Fazit\n\nn8n ist pragmatisch für interne Automatisierung — Architektur und Monitoring dennoch wie bei „echtem“ Code planen.",
+    "author": "Jumaa Almarzouk",
+    "date": "2025-04-22",
+    "category": "Automation",
+    "tags": [
+      "n8n",
+      "Webhooks",
+      "API",
+      "Automation"
+    ],
+    "readTime": "6 min"
   }
 ]

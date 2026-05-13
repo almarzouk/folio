@@ -1,195 +1,188 @@
 "use client";
 
-import { Briefcase, Code2, GraduationCap, Languages } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import {
+  Briefcase,
+  Code2,
+  GraduationCap,
+  Languages,
+  MapPin,
+  Calendar,
+} from "lucide-react";
+import { useI18n } from "@/components/i18n-provider";
 
-const highlights = [
-  {
-    icon: Code2,
-    title: "Fullstack Development",
-    description: "Expertise in modernen Frontend- und Backend-Technologien",
-  },
-  {
-    icon: Briefcase,
-    title: "Berufserfahrung",
-    description: "Mehrjährige Erfahrung in Web- und WordPress-Entwicklung",
-  },
-  {
-    icon: GraduationCap,
-    title: "Kontinuierliche Weiterbildung",
-    description: "Stets auf dem neuesten Stand der Webtechnologien",
-  },
-  {
-    icon: Languages,
-    title: "Mehrsprachig",
-    description: "Deutsch (B1), Englisch (B2), Arabisch (Muttersprache)",
-  },
+const highlightIcons = [Code2, Briefcase, GraduationCap, Languages];
+const highlightStyles = [
+  { color: "text-violet-500", bg: "bg-violet-500/10" },
+  { color: "text-blue-500", bg: "bg-blue-500/10" },
+  { color: "text-cyan-500", bg: "bg-cyan-500/10" },
+  { color: "text-emerald-500", bg: "bg-emerald-500/10" },
 ];
 
 export default function About() {
+  const { messages: m } = useI18n();
+  const containerRef = useRef(null);
+  const inView = useInView(containerRef, { once: true, margin: "-60px" });
+
   return (
-    <section id="about" className="py-20 sm:py-24 lg:py-32 bg-secondary/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Über mich
+    <section
+      id="about"
+      className="relative overflow-hidden py-20 sm:py-24 lg:py-28"
+    >
+      <div className="absolute inset-0 -z-10 bg-secondary/25" />
+      <div className="section-rule absolute left-0 right-0 top-0" />
+      <div className="section-rule absolute bottom-0 left-0 right-0" />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{
+              duration: 0.55,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            }}
+            className="mb-12 text-center sm:mb-14"
+          >
+            <h2 className="mb-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+              {m.about.title}{" "}
+              <span className="text-primary">{m.about.titleAccent}</span>
             </h2>
-            <div className="w-20 h-1 bg-primary mx-auto rounded-full" />
-          </div>
+            <div
+              className="mx-auto h-1 w-16 rounded-full"
+              style={{ background: "hsl(var(--primary))" }}
+            />
+          </motion.div>
 
-          {/* Main Content */}
-          <div className="space-y-12">
-            {/* Introduction */}
-            <div className="prose prose-lg dark:prose-invert max-w-none">
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Ich bin ein leidenschaftlicher{" "}
-                <span className="text-foreground font-semibold">
-                  Fullstack Webentwickler
-                </span>{" "}
-                mit Sitz in Haselünne, Deutschland. Mein Fokus liegt auf der
-                Entwicklung moderner, skalierbarer Webanwendungen mit einem
-                besonderen Augenmerk auf Performance, Benutzerfreundlichkeit und
-                sauberen Code.
+          <div className="space-y-14" ref={containerRef}>
+            <motion.div
+              initial={{ opacity: 0, y: 26 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.65,
+                ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+              }}
+              className="glass-card space-y-4 rounded-2xl border border-border p-7"
+            >
+              <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary" />
+                {m.about.locationLine}
+              </div>
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                {m.about.bio1}
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed mt-4">
-                Mit umfassender Erfahrung in{" "}
-                <span className="text-primary font-medium">React</span>,{" "}
-                <span className="text-primary font-medium">Next.js</span>,{" "}
-                <span className="text-primary font-medium">Node.js</span> und{" "}
-                <span className="text-primary font-medium">WordPress</span>{" "}
-                entwickle ich sowohl maßgeschneiderte Webanwendungen als auch
-                leistungsstarke Content-Management-Systeme. Meine Arbeitsweise
-                ist strukturiert, agil und stets darauf ausgerichtet, innovative
-                Lösungen für komplexe Herausforderungen zu finden.
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                {m.about.bio2}
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed mt-4">
-                Derzeit arbeite ich als WordPress & Frontend Entwickler in
-                Deutschland und unterstütze Unternehmen dabei, ihre digitale
-                Präsenz zu optimieren und ihre Geschäftsziele durch moderne
-                Webtechnologien zu erreichen.
-              </p>
-            </div>
+            </motion.div>
 
-            {/* Highlights Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-              {highlights.map((item, index) => (
-                <Card
-                  key={index}
-                  className="group hover:border-primary/50 transition-all duration-300"
-                >
-                  <CardContent className="p-6 flex gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        <item.icon className="w-6 h-6 text-primary" />
-                      </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {m.about.highlights.map((item, index) => {
+                const Icon = highlightIcons[index] ?? Code2;
+                const style = highlightStyles[index] ?? highlightStyles[0];
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{
+                      duration: 0.55,
+                      delay: index * 0.08,
+                      ease: [0.16, 1, 0.3, 1] as [
+                        number,
+                        number,
+                        number,
+                        number,
+                      ],
+                    }}
+                    className="glass-card card-hover flex gap-4 rounded-2xl border border-border p-5"
+                  >
+                    <div
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${style.bg}`}
+                    >
+                      <Icon className={`h-5 w-5 ${style.color}`} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-1">
+                      <h3 className="mb-1 text-base font-semibold">
                         {item.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">
                         {item.description}
                       </p>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
 
-            {/* Career Path */}
-            <div className="mt-12">
-              <h3 className="text-2xl font-semibold mb-6 text-center">
-                Beruflicher Werdegang & Ausbildung
-              </h3>
-              <div className="space-y-6">
-                <div className="border-l-2 border-primary pl-6 pb-6 relative">
-                  <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary" />
-                  <div className="mb-1 text-sm text-primary font-medium">
-                    2024 – Heute
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    WordPress & Frontend Entwickler
-                  </h4>
-                  <p className="text-muted-foreground">
-                    Eilinghoff + Team GmbH, Deutschland • Entwicklung und
-                    Optimierung von WordPress-Websites, Theme-Entwicklung,
-                    Performance-Verbesserungen und Frontend-Lösungen mit
-                    modernen Technologien.
-                  </p>
-                </div>
+            <div>
+              <motion.h3
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.55, delay: 0.2 }}
+                className="mb-8 text-center text-2xl font-bold"
+              >
+                {m.about.timelineTitle}{" "}
+                <span className="text-primary">
+                  {m.about.timelineTitleAccent}
+                </span>
+              </motion.h3>
 
-                <div className="border-l-2 border-primary/70 pl-6 pb-6 relative">
-                  <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary/70" />
-                  <div className="mb-1 text-sm text-primary/70 font-medium">
-                    2023
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    Diplom in Front-End und Back-End Entwicklung
-                  </h4>
-                  <p className="text-muted-foreground">
-                    AFPA, Frankreich • Umfassende Ausbildung in moderner
-                    Webentwicklung, Frontend- und Backend-Technologien.
-                  </p>
-                </div>
+              <div className="relative">
+                <div className="absolute bottom-0 left-4 top-0 w-px bg-primary/35 sm:left-5" />
 
-                <div className="border-l-2 border-primary/50 pl-6 pb-6 relative">
-                  <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary/50" />
-                  <div className="mb-1 text-sm text-primary/50 font-medium">
-                    2022
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    Praktikant als WordPress-Entwickler
-                  </h4>
-                  <p className="text-muted-foreground">
-                    Foreigners in Europe SRL, Italien • Praktische Erfahrung in
-                    der WordPress-Entwicklung, Plugin-Entwicklung und
-                    Website-Wartung.
-                  </p>
-                </div>
+                <div className="space-y-5">
+                  {m.about.timeline.map((item, index) => (
+                    <motion.div
+                      key={`${item.period}-${item.role}`}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={inView ? { opacity: 1, x: 0 } : {}}
+                      transition={{
+                        duration: 0.55,
+                        delay: 0.28 + index * 0.09,
+                        ease: [0.16, 1, 0.3, 1] as [
+                          number,
+                          number,
+                          number,
+                          number,
+                        ],
+                      }}
+                      className="relative pl-12 sm:pl-14"
+                    >
+                      <div
+                        className={`absolute left-2.5 top-3.5 h-3.5 w-3.5 rounded-full border-2 border-primary sm:left-3.5 ${
+                          item.current ? "bg-primary" : "bg-background"
+                        }`}
+                      >
+                        {item.current && (
+                          <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-35" />
+                        )}
+                      </div>
 
-                <div className="border-l-2 border-primary/40 pl-6 pb-6 relative">
-                  <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary/40" />
-                  <div className="mb-1 text-sm text-primary/40 font-medium">
-                    2021
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    Webdesigner & Grafikdesigner
-                  </h4>
-                  <p className="text-muted-foreground">
-                    Focus Production, Türkei • Design und Entwicklung von
-                    Websites, Branding, UI/UX-Design und digitale
-                    Marketinglösungen.
-                  </p>
-                </div>
-
-                <div className="border-l-2 border-primary/30 pl-6 pb-6 relative">
-                  <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary/30" />
-                  <div className="mb-1 text-sm text-primary/30 font-medium">
-                    2019
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    Webdesigner & Grafikdesigner
-                  </h4>
-                  <p className="text-muted-foreground">
-                    Zero Production, Türkei • Design und Entwicklung von
-                    Websites, Grafik-Design und visuelle Identität.
-                  </p>
-                </div>
-
-                <div className="border-l-2 border-primary/20 pl-6 relative">
-                  <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-primary/20" />
-                  <div className="mb-1 text-sm text-primary/20 font-medium">
-                    2009 – 2012
-                  </div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    Programmierung und Systembetrieb
-                  </h4>
-                  <p className="text-muted-foreground">
-                    Gymnasium in Adra, Syrien • Grundlagen der Programmierung
-                    und Systemadministration.
-                  </p>
+                      <div className="glass-card card-hover rounded-2xl border border-border p-5">
+                        <div className="mb-2 flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                            <Calendar className="h-3 w-3" />
+                            {item.period}
+                          </span>
+                          {item.current && (
+                            <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                              ● {m.about.currentLabel}
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="mb-1 text-base font-semibold">{item.role}</h4>
+                        <p className="mb-2 text-sm font-medium text-primary/85">
+                          {item.company}
+                        </p>
+                        <p className="text-sm leading-relaxed text-muted-foreground">
+                          {item.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>

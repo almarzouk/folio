@@ -1,31 +1,36 @@
+"use client";
+
 import React from "react";
 import Script from "next/script";
+import { useI18n } from "@/components/i18n-provider";
 
 interface JsonLdProps {
   data: object;
+  id: string;
 }
 
-export default function JsonLd({ data }: JsonLdProps) {
+export default function JsonLd({ data, id }: JsonLdProps) {
   return (
     <Script
-      id="json-ld"
+      id={id}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
 }
 
-// Person Schema for Homepage
+const SITE = "https://jumaa-portfolio.vercel.app";
+
 export function PersonSchema() {
+  const { messages: m } = useI18n();
   const schema = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Jumaa Almarzouk",
-    jobTitle: "Fullstack Web Developer",
-    description:
-      "Fullstack Webentwickler spezialisiert auf React, Next.js, WordPress und moderne Webtechnologien",
-    url: "jumaa-portfolio.vercel.app",
-    image: "jumaa-portfolio.vercel.app/photo.png",
+    jobTitle: m.jsonLd.jobTitle,
+    description: m.jsonLd.personDescription,
+    url: SITE,
+    image: `${SITE}/photo.png`,
     email: "jumaa.almarzouk@gmail.com",
     address: {
       "@type": "PostalAddress",
@@ -51,10 +56,9 @@ export function PersonSchema() {
     ],
   };
 
-  return <JsonLd data={schema} />;
+  return <JsonLd id="json-ld-person" data={schema} />;
 }
 
-// Blog Posting Schema
 export function BlogPostingSchema({
   title,
   description,
@@ -80,48 +84,47 @@ export function BlogPostingSchema({
     author: {
       "@type": "Person",
       name: author,
-      url: "jumaa-portfolio.vercel.app",
+      url: SITE,
     },
     publisher: {
       "@type": "Person",
       name: "Jumaa Almarzouk",
       logo: {
         "@type": "ImageObject",
-        url: "jumaa-portfolio.vercel.app/JA.png",
+        url: `${SITE}/JA.png`,
       },
     },
     datePublished: datePublished,
     dateModified: dateModified || datePublished,
     url: url,
-    image: image || "jumaa-portfolio.vercel.app/og-image",
+    image: image || `${SITE}/og-image`,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": url,
     },
   };
 
-  return <JsonLd data={schema} />;
+  return <JsonLd id="json-ld-blog-posting" data={schema} />;
 }
 
-// Website Schema
 export function WebsiteSchema() {
+  const { messages: m } = useI18n();
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Jumaa Almarzouk Portfolio",
-    description:
-      "Portfolio und Blog von Jumaa Almarzouk - Fullstack Webentwickler",
-    url: "jumaa-portfolio.vercel.app",
+    name: "Jumaa Almarzouk",
+    description: m.jsonLd.websiteDescription,
+    url: SITE,
     author: {
       "@type": "Person",
       name: "Jumaa Almarzouk",
     },
     potentialAction: {
       "@type": "SearchAction",
-      target: "jumaa-portfolio.vercel.app/blog?search={search_term_string}",
+      target: `${SITE}/blog?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
 
-  return <JsonLd data={schema} />;
+  return <JsonLd id="json-ld-website" data={schema} />;
 }

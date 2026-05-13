@@ -1,15 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import {
   ExternalLink,
@@ -17,10 +10,30 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Star,
+  LayoutGrid,
 } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/components/i18n-provider";
+import {
+  portfolioProjects,
+  projectCopy,
+  type ProjectCategoryKey,
+  type PortfolioProject,
+} from "@/lib/data/portfolio-projects";
+import type { Locale } from "@/lib/i18n/config";
+import type { Messages } from "@/lib/i18n/messages";
+import { cn } from "@/lib/utils";
 
-// Image Modal Component
+const CATEGORY_ORDER: (ProjectCategoryKey | "all")[] = [
+  "all",
+  "nextjs",
+  "reactjs",
+  "php",
+  "static",
+  "tailwind",
+];
+
 function ImageModal({
   images,
   currentIndex,
@@ -28,6 +41,7 @@ function ImageModal({
   onNext,
   onPrev,
   title,
+  labels,
 }: {
   images: string[];
   currentIndex: number;
@@ -35,63 +49,63 @@ function ImageModal({
   onNext: () => void;
   onPrev: () => void;
   title: string;
+  labels: { close: string; prev: string; next: string; image: string };
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/88 p-4"
       onClick={onClose}
     >
-      {/* Close Button */}
       <button
+        type="button"
         onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
-        aria-label="Schließen"
+        className="absolute right-4 top-4 z-10 text-white transition-colors hover:text-zinc-300"
+        aria-label={labels.close}
       >
         <X className="h-8 w-8" />
       </button>
 
-      {/* Image Container */}
       <div
-        className="relative w-full h-full flex items-center justify-center"
+        className="relative flex h-full w-full max-h-[90vh] max-w-7xl items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative w-full h-full max-w-7xl max-h-[90vh]">
+        <div className="relative h-full w-full">
           <Image
-            src={images[currentIndex]}
-            alt={`${title} - Bild ${currentIndex + 1}`}
+            src={images[currentIndex] ?? ""}
+            alt={`${title} — ${labels.image} ${currentIndex + 1}`}
             fill
             className="object-contain"
             sizes="100vw"
-            quality={100}
+            quality={95}
           />
         </div>
 
-        {/* Navigation Buttons */}
         {images.length > 1 && (
           <>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onPrev();
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-colors"
-              aria-label="Vorheriges Bild"
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+              aria-label={labels.prev}
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onNext();
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-colors"
-              aria-label="Nächstes Bild"
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+              aria-label={labels.next}
             >
               <ChevronRight className="h-6 w-6" />
             </button>
 
-            {/* Image Counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full text-sm">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/55 px-4 py-2 text-sm text-white">
               {currentIndex + 1} / {images.length}
             </div>
           </>
@@ -101,15 +115,18 @@ function ImageModal({
   );
 }
 
-// Image Slider Component
 function ImageSlider({
   images,
   title,
   onImageClick,
+  labels,
+  variant = "grid",
 }: {
   images: string[];
   title: string;
   onImageClick: (index: number) => void;
+  labels: { prev: string; next: string; dot: string };
+  variant?: "grid" | "featured";
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -122,60 +139,68 @@ function ImageSlider({
   };
 
   return (
-    <div className="relative h-64 bg-primary/20 overflow-hidden group">
+    <div
+      className={cn(
+        "group relative overflow-hidden bg-primary/10",
+        variant === "featured"
+          ? "h-52 min-h-[13rem] w-full lg:h-full lg:min-h-[17rem]"
+          : "h-44 sm:h-48"
+      )}
+    >
       <div
-        className="relative w-full h-full cursor-pointer"
+        className="relative h-full w-full cursor-pointer"
         onClick={() => onImageClick(currentIndex)}
       >
         <Image
-          src={images[currentIndex]}
-          alt={`${title} - Bild ${currentIndex + 1}`}
+          src={images[currentIndex] ?? ""}
+          alt={`${title} — ${currentIndex + 1}`}
           fill
-          className="object-cover transition-transform duration-300"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors" />
+        <div className="absolute inset-0 bg-primary/0 transition-colors group-hover:bg-primary/10" />
       </div>
 
       {images.length > 1 && (
         <>
-          {/* Navigation Buttons */}
           <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               prevSlide();
             }}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Vorheriges Bild"
+            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
+            aria-label={labels.prev}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               nextSlide();
             }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label="Nächstes Bild"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
+            aria-label={labels.next}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
 
-          {/* Dots Indicator */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
             {images.map((_, index) => (
               <button
                 key={index}
+                type="button"
                 onClick={(e) => {
                   e.preventDefault();
                   setCurrentIndex(index);
                 }}
-                className={`w-2 h-2 rounded-full transition-all ${
+                className={`h-2 rounded-full transition-all ${
                   index === currentIndex
-                    ? "bg-white w-6"
-                    : "bg-white/50 hover:bg-white/75"
+                    ? "w-6 bg-white"
+                    : "w-2 bg-white/50 hover:bg-white/75"
                 }`}
-                aria-label={`Zu Bild ${index + 1} wechseln`}
+                aria-label={`${labels.dot} ${index + 1}`}
               />
             ))}
           </div>
@@ -185,295 +210,114 @@ function ImageSlider({
   );
 }
 
-const projects = [
-  {
-    title: "Mein Termin - SAAS App",
-    description:
-      "Mein Termin ist eine SAAS-Anwendung zur Terminverwaltung, entwickelt mit Laravel und Vue.js.",
-    longDescription:
-      "Eine benutzerfreundliche SAAS-App, die es Unternehmen ermöglicht, Termine effizient zu verwalten, Kundenbenachrichtigungen zu senden und Berichte zu generieren.",
-    technologies: ["Laravel", "Vue.js", "MySQL", "Tailwind CSS", "PHP"],
-    category: "PHP",
-    images: [
-      "/projects/Mein Termin SAAS APP - Laravel - 1.png",
-      "/projects/Mein Termin SAAS APP - Laravel - 2.png",
-      "/projects/Mein Termin SAAS APP - Laravel - 3.png",
-      "/projects/Mein Termin SAAS APP - Laravel - 4.png",
-      "/projects/Mein Termin SAAS APP - Laravel - 5.png",
-    ],
-    github: "https://github.com/almarzouk/termin/blob/main/README.md",
-    live: "#",
-    featured: true,
-  },
-  {
-    title: "PHP Job Portal",
-    description:
-      "Vollständiges Job-Portal entwickelt mit PHP für Stellenausschreibungen, Bewerbungen und Kandidatenverwaltung.",
-    longDescription:
-      "Ein umfassendes Job-Portal mit Funktionen für Arbeitgeber und Arbeitnehmer. Enthält Stellenverwaltung, Bewerbungssystem, Kandidatenprofile und Admin-Dashboard.",
-    technologies: ["PHP", "MySQL", "JavaScript", "Bootstrap", "HTML5", "CSS3"],
-    category: "PHP",
-    images: [
-      "/projects/Job Portal Laravel - 1.png",
-      "/projects/Job Portal Laravel - 2.png",
-      "/projects/Job Portal Laravel - 3.png",
-      "/projects/Job Portal Laravel - 4.png",
-      "/projects/Job Portal Laravel - 5.png",
-    ],
-    github: "https://github.com/almarzouk/my-jobs",
-    live: "#",
-    featured: true,
-  },
-  {
-    title: "Next.js E-Commerce Store",
-    description:
-      "Moderner Online-Shop mit Next.js entwickelt, inklusive Produktverwaltung, Warenkorb und Checkout-Prozess.",
-    longDescription:
-      "Ein vollständiger E-Commerce Store mit Server-Side Rendering, optimierter Performance und moderner Benutzeroberfläche. Enthält Produktkatalog, Suchfunktion und Bestellverwaltung.",
-    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Stripe"],
-    category: "Nextjs",
-    images: ["/projects/prostore.png"],
-    github: "#",
-    live: "https://prostore-sgly.vercel.app/",
-    featured: true,
-  },
-  {
-    title: "MERN Stack Job Portal",
-    description:
-      "Full-Stack Job-Portal entwickelt mit MERN-Stack für moderne Stellensuche und Bewerbungsmanagement.",
-    longDescription:
-      "Vollständige Job-Portal-Anwendung mit MongoDB, Express, React und Node.js. Features: Echtzeit-Benachrichtigungen, Bewerbungsverfolgung und Kandidaten-Matching.",
-    technologies: ["React", "Node.js", "MongoDB", "Express", "Redux", "JWT"],
-    category: "Reactjs",
-    images: ["/projects/Job Portal nextjs.png"],
-    github: "#",
-    live: "https://jop-portal-client.vercel.app/",
-    featured: false,
-  },
-  {
-    title: "Inventory Management App",
-    description:
-      "Lagerverwaltungssystem mit Next.js für Bestandskontrolle, Produktverwaltung und Reporting.",
-    longDescription:
-      "Eine umfassende Inventory-Management-Lösung mit Echtzeit-Bestandsverfolgung, automatischen Bestellungen bei niedrigem Lagerbestand und detaillierten Berichten.",
-    technologies: [
-      "Next.js",
-      "TypeScript",
-      "Prisma",
-      "PostgreSQL",
-      "Tailwind CSS",
-    ],
-    category: "Nextjs",
-    images: ["/projects/Stock management.png"],
-    github: "https://github.com/almarzouk/inventory",
-    live: "#",
-    featured: false,
-  },
-  {
-    title: "Frontend React Amazon Clone",
-    description:
-      "Amazon-Frontend-Clone mit React entwickelt, inklusive Produktanzeige, Warenkorb und responsivem Design.",
-    longDescription:
-      "Vollständiger Amazon-Frontend-Clone mit Produktkatalog, Filterung, Warenkorb-Funktionalität und authentischer Amazon-UI/UX.",
-    technologies: [
-      "React",
-      "JavaScript",
-      "CSS3",
-      "React Router",
-      "Context API",
-    ],
-    category: "Reactjs",
-    images: ["/projects/Amazon Clone.jpg"],
-    github: "#",
-    live: "https://jumaa-amazon.netlify.app/",
-    featured: false,
-  },
-  {
-    title: "Personal Blog mit PHP",
-    description:
-      "Persönlicher Blog entwickelt mit PHP und Bootstrap für Content-Management und Artikel-Veröffentlichung.",
-    longDescription:
-      "Ein vollständiges Blog-System mit Admin-Panel, Artikel-Editor, Kategorie-Verwaltung und Kommentar-System.",
-    technologies: ["PHP", "MySQL", "Bootstrap", "JavaScript", "HTML5", "CSS3"],
-    category: "PHP",
-    images: ["/projects/weather app.jpg"],
-    github: "#",
-    live: "https://jumaa-blog-de.preview-domain.com/",
-    featured: false,
-  },
-  {
-    title: "Socialy - Marketing Landing Page",
-    description:
-      "Responsive Landing Page für ein Lösungsunternehmen mit modernem Design und Call-to-Actions.",
-    longDescription:
-      "Professionelle Landing Page mit responsivem Design, optimiert für Konversionen und Lead-Generierung.",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    category: "Statische Website",
-    images: ["/projects/ADEX.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/socialy/",
-    featured: false,
-  },
-  {
-    title: "Realvine - Immobilien Landing Page",
-    description:
-      "Responsive Landing Page für ein Immobilienunternehmen mit Eigenschaftsanzeigen und Kontaktformular.",
-    longDescription:
-      "Attraktive Landing Page für Immobilien mit Bildergalerien, Eigenschaftsfiltern und Kontaktoptionen.",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    category: "Statische Website",
-    images: ["/projects/Realvine.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/realvine/",
-    featured: false,
-  },
-  {
-    title: "Hoolix - Marketing Landing Page",
-    description:
-      "Responsive Landing Page für ein Marketingunternehmen mit Service-Übersicht und Portfolio.",
-    longDescription:
-      "Moderne Marketing-Landing-Page mit Service-Darstellung, Portfolio-Galerie und Lead-Capture-Formularen.",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    category: "Statische Website",
-    images: ["/projects/Hoolix.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/hoolix/",
-    featured: false,
-  },
-  {
-    title: "Dentelo - Zahnarztpraxis Landing Page",
-    description:
-      "Responsive Landing Page für eine Zahnarztpraxis mit Terminbuchung und Service-Informationen.",
-    longDescription:
-      "Professionelle Website für Zahnarztpraxis mit Terminbuchung, Behandlungsinformationen und Kontaktmöglichkeiten.",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    category: "Statische Website",
-    images: ["/projects/Dentelo.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/dentelo/",
-    featured: false,
-  },
-  {
-    title: "Crypto Landing Page",
-    description:
-      "Einfache Landing Page mit React und Tailwind für Kryptowährungs-Informationen.",
-    longDescription:
-      "Moderne Krypto-Landing-Page mit Echtzeit-Preisen, Marktdaten und responsivem Design.",
-    technologies: ["React", "Tailwind CSS", "JavaScript"],
-    category: "Reactjs",
-    images: ["/projects/coinbase.jpg"],
-    github: "#",
-    live: "https://jumaa-coin.netlify.app/",
-    featured: false,
-  },
-  {
-    title: "Bank Landing Page",
-    description:
-      "Einfache Landing Page mit React und Tailwind für moderne Banking-Lösungen.",
-    longDescription:
-      "Elegante Banking-Landing-Page mit Service-Übersicht und modernem Design.",
-    technologies: ["React", "Tailwind CSS", "JavaScript"],
-    category: "Reactjs",
-    images: ["/projects/Hoobank.jpg"],
-    github: "#",
-    live: "https://jumaa-bank.netlify.app/",
-    featured: false,
-  },
-  {
-    title: "Agentur Website",
-    description:
-      "Statische Agentur-Website mit Portfolio, Services und Kontaktinformationen.",
-    longDescription:
-      "Professionelle Agentur-Website mit Portfolio-Showcase, Service-Beschreibungen und Team-Vorstellung.",
-    technologies: ["HTML5", "CSS3", "JavaScript"],
-    category: "Statische Website",
-    images: ["/projects/ADEX.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/agancy/",
-    featured: false,
-  },
-  {
-    title: "Loruki - Cloud Hosting Website",
-    description:
-      "Loruki Website für die Speicherung oder Domainverwaltung mit modernem Design.",
-    longDescription:
-      "Cloud-Hosting-Website mit Preisplänen, Feature-Vergleichen und Kundenbereich.",
-    technologies: ["HTML5", "CSS3", "JavaScript"],
-    category: "Statische Website",
-    images: ["/projects/loruki.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/loruki-website/",
-    featured: false,
-  },
-  {
-    title: "Flower Website",
-    description:
-      "Flower Website für einen schönen Tag mit attraktivem Design und Produktgalerie.",
-    longDescription:
-      "Elegante Website für Blumengeschäft mit Produktgalerie, Bestellsystem und Kontaktformular.",
-    technologies: ["HTML5", "CSS3", "JavaScript"],
-    category: "Statische Website",
-    images: ["/projects/flower.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/theflow/",
-    featured: false,
-  },
-  {
-    title: "Applab - App Landing Page",
-    description:
-      "Applab - Beste App für deinen modernen Lebensstil mit Download-Links und Features.",
-    longDescription:
-      "Moderne App-Landing-Page mit Feature-Showcase, Screenshots und App-Store-Links.",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    category: "Statische Website",
-    images: ["/projects/Applap.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/applab/",
-    featured: false,
-  },
-  {
-    title: "Tailwind Demo Website",
-    description:
-      "Demo-Website entwickelt mit Tailwind CSS zur Demonstration von Utility-First-CSS.",
-    longDescription:
-      "Showcase-Website für Tailwind CSS mit verschiedenen Komponenten und Layout-Beispielen.",
-    technologies: ["HTML5", "Tailwind CSS", "JavaScript"],
-    category: "Tailwind",
-    images: ["/projects/Manage.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/manage-tailwind/",
-    featured: false,
-  },
-  {
-    title: "Bondi Theme Website",
-    description:
-      "Bondi Theme Website mit modernem Design und responsivem Layout.",
-    longDescription:
-      "Attraktive Theme-Website mit mehreren Sektionen, Portfolio-Galerie und Kontaktbereich.",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    category: "Statische Website",
-    images: ["/projects/ADEX.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/bondi/",
-    featured: false,
-  },
-];
-
-const categories = [
-  "Alle",
-  "Nextjs",
-  "Reactjs",
-  "PHP",
-  "Statische Website",
-  "Tailwind",
-];
+function FeaturedPreviewPanel({
+  project,
+  locale,
+  projectsMessages,
+  sliderLabels,
+  openModal,
+}: {
+  project: PortfolioProject;
+  locale: Locale;
+  projectsMessages: Messages["projects"];
+  sliderLabels: { prev: string; next: string; dot: string };
+  openModal: (images: string[], index: number, title: string) => void;
+}) {
+  const copy = projectCopy(project, locale);
+  return (
+    <div className="flex h-full min-h-[280px] flex-col lg:min-h-[360px]">
+      <div className="relative min-h-[200px] flex-1 lg:min-h-0">
+        <ImageSlider
+          variant="featured"
+          images={project.images}
+          title={copy.title}
+          onImageClick={(imgIndex) =>
+            openModal(project.images, imgIndex, copy.title)
+          }
+          labels={sliderLabels}
+        />
+      </div>
+      <div className="shrink-0 space-y-3 border-t border-border bg-muted/30 p-4 sm:p-5">
+        <div>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
+            {projectsMessages.categories[project.categoryKey]}
+          </p>
+          <h3 className="text-lg font-bold leading-tight sm:text-xl">
+            {copy.title}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {copy.longDescription}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {project.technologies.slice(0, 8).map((tech) => (
+            <span
+              key={tech}
+              className="rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2 pt-1">
+          {project.github !== "#" && (
+            <Button variant="outline" size="sm" asChild className="rounded-lg">
+              <Link
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github className="mr-2 h-4 w-4" />
+                {projectsMessages.code}
+              </Link>
+            </Button>
+          )}
+          {project.live !== "#" && (
+            <Button size="sm" asChild className="rounded-lg btn-primary">
+              <Link
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                {projectsMessages.liveDemo}
+              </Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Projects() {
-  const [selectedCategory, setSelectedCategory] = useState("Alle");
+  const { locale, messages: m } = useI18n();
+  const [selectedCategory, setSelectedCategory] = useState<
+    ProjectCategoryKey | "all"
+  >("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [modalIndex, setModalIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
+
+  const modalLabels = useMemo(
+    () => ({
+      close: m.projects.modalClose,
+      prev: m.projects.modalPrev,
+      next: m.projects.modalNext,
+      image: m.projects.modalImage,
+    }),
+    [m.projects]
+  );
+
+  const sliderLabels = useMemo(
+    () => ({
+      prev: m.projects.modalPrev,
+      next: m.projects.modalNext,
+      dot: m.projects.modalDot,
+    }),
+    [m.projects]
+  );
 
   const openModal = (images: string[], index: number, title: string) => {
     setModalImages(images);
@@ -498,16 +342,50 @@ export default function Projects() {
     );
   };
 
-  const filteredProjects =
-    selectedCategory === "Alle"
-      ? projects
-      : projects.filter((project) => project.category === selectedCategory);
+  const filteredProjects = useMemo(() => {
+    if (selectedCategory === "all") return portfolioProjects;
+    return portfolioProjects.filter(
+      (p) => p.categoryKey === selectedCategory
+    );
+  }, [selectedCategory]);
 
-  const featuredProjects = projects.filter((project) => project.featured);
+  const featuredProjects = useMemo(
+    () => portfolioProjects.filter((p) => p.featured),
+    []
+  );
+
+  const [activeFeaturedId, setActiveFeaturedId] = useState(
+    () => portfolioProjects.find((p) => p.featured)?.id ?? ""
+  );
+
+  useEffect(() => {
+    if (
+      featuredProjects.length > 0 &&
+      !featuredProjects.some((p) => p.id === activeFeaturedId)
+    ) {
+      setActiveFeaturedId(featuredProjects[0].id);
+    }
+  }, [featuredProjects, activeFeaturedId]);
+
+  const activeFeatured = useMemo(
+    () =>
+      featuredProjects.find((p) => p.id === activeFeaturedId) ??
+      featuredProjects[0],
+    [featuredProjects, activeFeaturedId]
+  );
+
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="projects" className="py-20 sm:py-24 lg:py-32 bg-secondary/30">
-      {/* Image Modal */}
+    <section
+      id="projects"
+      className="relative overflow-hidden py-20 sm:py-24 lg:py-28"
+    >
+      <div className="absolute inset-0 -z-10 bg-secondary/25" />
+      <div className="section-rule absolute left-0 right-0 top-0" />
+      <div className="section-rule absolute bottom-0 left-0 right-0" />
+
       {modalOpen && (
         <ImageModal
           images={modalImages}
@@ -516,228 +394,327 @@ export default function Projects() {
           onNext={nextImage}
           onPrev={prevImage}
           title={modalTitle}
+          labels={modalLabels}
         />
       )}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Ausgewählte Projekte
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-6xl" ref={sectionRef}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{
+              duration: 0.55,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            }}
+            className="mb-12 text-center sm:mb-14"
+          >
+            <h2 className="mb-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+              {m.projects.title}{" "}
+              <span className="text-primary">{m.projects.titleAccent}</span>
             </h2>
-            <div className="w-20 h-1 bg-primary mx-auto rounded-full mb-4" />
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Eine Auswahl meiner jüngsten Arbeiten, die meine Fähigkeiten in
-              der Fullstack-Entwicklung, WordPress und modernen
-              Frontend-Technologien demonstrieren.
+            <div
+              className="mx-auto mb-4 h-1 w-16 rounded-full"
+              style={{ background: "hsl(var(--primary))" }}
+            />
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+              {m.projects.subtitle}
             </p>
-          </div>
+          </motion.div>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className="transition-all"
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.06 }}
+            className="mb-10 flex flex-wrap justify-center gap-2"
+          >
+            {CATEGORY_ORDER.map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setSelectedCategory(key)}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                  selectedCategory === key
+                    ? "btn-primary border-transparent text-primary-foreground shadow-md"
+                    : "border-border bg-card hover:border-primary/45 hover:text-primary"
+                }`}
               >
-                {category}
-              </Button>
+                {m.projects.categories[key]}
+              </button>
             ))}
-          </div>
+          </motion.div>
 
-          {/* Featured Projects */}
-          {selectedCategory === "Alle" && (
-            <div className="mb-16">
-              <h3 className="text-2xl font-semibold mb-8 flex items-center gap-2">
-                <span className="text-primary">★</span> Hervorgehobene Projekte
-              </h3>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {featuredProjects.map((project, index) => (
-                  <Card
-                    key={index}
-                    className="group overflow-hidden hover:shadow-2xl hover:border-primary/50 transition-all duration-300"
+          {selectedCategory === "all" && (
+            <div className="mb-14">
+              <div className="mb-6 flex flex-wrap items-center gap-3 px-1">
+                <LayoutGrid className="h-6 w-6 shrink-0 text-primary" aria-hidden />
+                <div className="text-lg font-bold">
+                  <Star className="mr-2 inline-block h-5 w-5 fill-primary text-primary align-middle" />
+                  {m.projects.featured}{" "}
+                  <span className="text-primary">
+                    {m.projects.featuredAccent}
+                  </span>
+                </div>
+                <p className="w-full text-sm text-muted-foreground lg:ml-auto lg:w-auto">
+                  {locale === "de"
+                    ? "Projekt wählen — Vorschau & Screenshots rechts."
+                    : "Pick a project — preview and screenshots on the right."}
+                </p>
+              </div>
+
+              <div className="lg:hidden">
+                {activeFeatured && (
+                  <motion.div
+                    key={activeFeatured.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden rounded-2xl border border-border bg-card shadow-md"
                   >
-                    {/* Project Image Slider */}
-                    <ImageSlider
-                      images={project.images}
-                      title={project.title}
-                      onImageClick={(imgIndex) =>
-                        openModal(project.images, imgIndex, project.title)
-                      }
+                    <FeaturedPreviewPanel
+                      project={activeFeatured}
+                      locale={locale}
+                      projectsMessages={m.projects}
+                      sliderLabels={sliderLabels}
+                      openModal={openModal}
                     />
+                  </motion.div>
+                )}
+                <div
+                  className="mt-4 flex gap-2 overflow-x-auto pb-2 pt-1 [-ms-overflow-style:none] [scrollbar-width:thin]"
+                  role="tablist"
+                  aria-label="Featured projects"
+                >
+                  {featuredProjects.map((p) => {
+                    const c = projectCopy(p, locale);
+                    const active = p.id === activeFeaturedId;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => setActiveFeaturedId(p.id)}
+                        className={cn(
+                          "shrink-0 rounded-xl border px-4 py-2.5 text-left transition-all",
+                          active
+                            ? "border-primary bg-primary text-primary-foreground shadow-md"
+                            : "border-border bg-card hover:border-primary/40"
+                        )}
+                      >
+                        <span className="block font-mono text-[10px] uppercase opacity-70">
+                          {p.id}
+                        </span>
+                        <span className="line-clamp-2 max-w-[10rem] text-sm font-semibold">
+                          {c.title}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="text-2xl mb-2 group-hover:text-primary transition-colors">
-                            {project.title}
-                          </CardTitle>
-                          <CardDescription className="text-sm">
-                            {project.longDescription}
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech, techIndex) => (
-                          <span
-                            key={techIndex}
-                            className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </CardContent>
-
-                    <CardFooter className="flex gap-3">
-                      {project.github !== "#" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          asChild
-                          className="flex-1"
+              <div className="hidden overflow-hidden rounded-2xl border border-border bg-card/80 shadow-xl backdrop-blur-sm lg:grid lg:min-h-[400px] lg:grid-cols-12 lg:gap-0">
+                <nav
+                  className="col-span-4 flex max-h-[min(70vh,560px)] flex-col gap-1 overflow-y-auto border-b border-border p-3 lg:border-b-0 lg:border-r"
+                  aria-label="Featured projects"
+                >
+                  {featuredProjects.map((p, i) => {
+                    const c = projectCopy(p, locale);
+                    const active = p.id === activeFeaturedId;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setActiveFeaturedId(p.id)}
+                        className={cn(
+                          "rounded-xl px-4 py-3 text-left transition-all",
+                          active
+                            ? "bg-primary text-primary-foreground shadow-md ring-2 ring-primary/30"
+                            : "hover:bg-muted/80"
+                        )}
+                      >
+                        <span className="font-mono text-xs opacity-70">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="mt-0.5 block font-semibold leading-snug">
+                          {c.title}
+                        </span>
+                        <span
+                          className={cn(
+                            "mt-1 block line-clamp-2 text-xs",
+                            active ? "text-primary-foreground/85" : "text-muted-foreground"
+                          )}
                         >
-                          <Link
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Github className="mr-2 h-4 w-4" />
-                            Code
-                          </Link>
-                        </Button>
-                      )}
-                      {project.live !== "#" && (
-                        <Button size="sm" asChild className="flex-1">
-                          <Link
-                            href={project.live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink className="mr-2 h-4 w-4" />
-                            Live Demo
-                          </Link>
-                        </Button>
-                      )}
-                    </CardFooter>
-                  </Card>
-                ))}
+                          {c.description}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+                <div className="col-span-8 min-h-[360px] bg-background/50 p-3 sm:p-4">
+                  {activeFeatured && (
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={activeFeatured.id}
+                        initial={{ opacity: 0, x: 12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -8 }}
+                        transition={{ duration: 0.22 }}
+                        className="h-full overflow-hidden rounded-xl border border-border bg-card"
+                      >
+                        <FeaturedPreviewPanel
+                          project={activeFeatured}
+                          locale={locale}
+                          projectsMessages={m.projects}
+                          sliderLabels={sliderLabels}
+                          openModal={openModal}
+                        />
+                      </motion.div>
+                    </AnimatePresence>
+                  )}
+                </div>
               </div>
             </div>
           )}
 
-          {/* All Projects Grid */}
           <div>
-            {selectedCategory !== "Alle" && (
-              <h3 className="text-2xl font-semibold mb-8">
-                {selectedCategory} Projekte
+            {selectedCategory !== "all" && (
+              <h3 className="mb-6 text-lg font-bold">
+                <span className="text-primary">
+                  {m.projects.categories[selectedCategory]}
+                </span>{" "}
+                {m.projects.categoryProjects}
               </h3>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {filteredProjects
-                .filter((p) => selectedCategory !== "Alle" || !p.featured)
-                .map((project, index) => (
-                  <Card
-                    key={index}
-                    className="group overflow-hidden hover:shadow-xl hover:border-primary/50 transition-all duration-300 flex flex-col"
-                  >
-                    {/* Project Image */}
-                    <div
-                      className="relative h-48 bg-primary/10 overflow-hidden cursor-pointer"
-                      onClick={() =>
-                        openModal(project.images, 0, project.title)
-                      }
+                .filter((p) => selectedCategory !== "all" || !p.featured)
+                .map((project, index) => {
+                  const copy = projectCopy(project, locale);
+                  return (
+                    <motion.div
+                      key={project.id}
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={inView ? { opacity: 1, y: 0 } : {}}
+                      transition={{
+                        duration: 0.45,
+                        delay: index * 0.05,
+                        ease: [0.16, 1, 0.3, 1] as [
+                          number,
+                          number,
+                          number,
+                          number,
+                        ],
+                      }}
+                      className={cn(
+                        "group/card relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg",
+                        index % 2 === 1 && "md:translate-y-10"
+                      )}
                     >
-                      <Image
-                        src={project.images[0]}
-                        alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    </div>
-
-                    <CardHeader className="flex-1">
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {project.title}
-                      </CardTitle>
-                      <CardDescription className="text-sm">
-                        {project.description}
-                      </CardDescription>
-                    </CardHeader>
-
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies
-                          .slice(0, 3)
-                          .map((tech, techIndex) => (
+                      <div
+                        className="relative aspect-[16/10] cursor-pointer overflow-hidden bg-muted"
+                        onClick={() =>
+                          openModal(project.images, 0, copy.title)
+                        }
+                      >
+                        <Image
+                          src={project.images[0] ?? ""}
+                          alt={copy.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover/card:scale-105"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 border-t border-border/60 bg-background/92 p-4 pt-10 backdrop-blur-sm">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-primary">
+                            {m.projects.categories[project.categoryKey]}
+                          </p>
+                          <h3 className="line-clamp-2 text-base font-bold leading-snug">
+                            {copy.title}
+                          </h3>
+                        </div>
+                        <div className="absolute right-3 top-3 flex gap-1.5 opacity-0 transition-opacity group-hover/card:opacity-100">
+                          {project.github !== "#" && (
+                            <Button
+                              size="icon"
+                              variant="secondary"
+                              className="h-9 w-9 rounded-full border border-border bg-background/90 shadow-md"
+                              asChild
+                            >
+                              <Link
+                                href={project.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Github className="h-4 w-4" />
+                              </Link>
+                            </Button>
+                          )}
+                          {project.live !== "#" && (
+                            <Button
+                              size="icon"
+                              className="h-9 w-9 rounded-full btn-primary shadow-md"
+                              asChild
+                            >
+                              <Link
+                                href={project.live}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-1 flex-col gap-3 p-4 pt-3">
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
+                          {copy.description}
+                        </p>
+                        <div className="mt-auto flex flex-wrap gap-1.5">
+                          {project.technologies.slice(0, 4).map((tech) => (
                             <span
-                              key={techIndex}
-                              className="px-2 py-1 bg-secondary text-foreground text-xs rounded-md"
+                              key={tech}
+                              className="rounded border border-primary/15 bg-primary/8 px-2 py-0.5 text-[11px] font-medium text-primary"
                             >
                               {tech}
                             </span>
                           ))}
-                        {project.technologies.length > 3 && (
-                          <span className="px-2 py-1 bg-secondary text-muted-foreground text-xs rounded-md">
-                            +{project.technologies.length - 3}
-                          </span>
-                        )}
+                          {project.technologies.length > 4 && (
+                            <span className="rounded border border-border px-2 py-0.5 text-[11px] text-muted-foreground">
+                              +{project.technologies.length - 4}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </CardContent>
-
-                    <CardFooter className="flex gap-2">
-                      {project.github !== "#" && (
-                        <Button variant="outline" size="sm" asChild>
-                          <Link
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Github className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                      )}
-                      {project.live !== "#" && (
-                        <Button size="sm" asChild className="flex-1">
-                          <Link
-                            href={project.live}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink className="mr-2 h-4 w-4" />
-                            Ansehen
-                          </Link>
-                        </Button>
-                      )}
-                    </CardFooter>
-                  </Card>
-                ))}
+                    </motion.div>
+                  );
+                })}
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="mt-16 text-center">
-            <p className="text-muted-foreground mb-6">
-              Interessiert an meiner Arbeit? Schauen Sie sich mein GitHub-Profil
-              für weitere Projekte an.
-            </p>
-            <Button asChild size="lg" variant="outline">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.35 }}
+            className="mt-14 text-center"
+          >
+            <p className="mb-5 text-muted-foreground">{m.projects.githubCta}</p>
+            <Button asChild size="lg" className="rounded-xl btn-primary px-8 shadow-md">
               <Link
                 href="https://github.com/almarzouk"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Github className="mr-2 h-5 w-5" />
-                Weitere Projekte auf GitHub
+                {m.projects.githubCtaButton}
               </Link>
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

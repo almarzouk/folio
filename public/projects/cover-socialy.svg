@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#1e3a5f"/>
+  <rect x="40" y="40" width="720" height="8" rx="4" fill="#3b82f6" opacity="0.9"/>
+  <rect x="40" y="70" width="480" height="6" rx="3" fill="#60a5fa" opacity="0.5"/>
+  <rect x="40" y="95" width="560" height="6" rx="3" fill="#60a5fa" opacity="0.35"/>
+  <text x="40" y="200" fill="#93c5fd" font-family="system-ui,sans-serif" font-size="28" font-weight="600">Socialy</text>
+  <text x="40" y="240" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">Marketing · Landing</text>
+</svg>

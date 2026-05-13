@@ -1,148 +1,203 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
-
-const navigation = [
-  { name: "Start", href: "#hero" },
-  { name: "Über mich", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projekte", href: "#projects" },
-  { name: "Blog", href: "/blog" },
-  { name: "Kontakt", href: "#contact" },
-];
+import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/components/i18n-provider";
+import { withLocale } from "@/lib/i18n/paths";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 export default function Header() {
+  const { locale, messages: m } = useI18n();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+
+  const navigation = useMemo(
+    () => [
+      { name: m.nav.home, href: `${withLocale(locale, "/")}#hero` },
+      { name: m.nav.about, href: `${withLocale(locale, "/")}#about` },
+      { name: m.nav.skills, href: `${withLocale(locale, "/")}#skills` },
+      { name: m.nav.projects, href: `${withLocale(locale, "/")}#projects` },
+      { name: m.nav.blog, href: "/blog" },
+      { name: m.nav.contact, href: `${withLocale(locale, "/")}#contact` },
+    ],
+    [locale, m.nav]
+  );
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 12);
+      const sections = ["hero", "about", "skills", "projects", "contact"];
+      for (const id of sections.slice().reverse()) {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 120) {
+          setActiveSection(id);
+          break;
+        }
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [isMobileMenuOpen]);
 
   return (
-    <header
+    <motion.header
+      initial={{ y: -72, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-lg border-b border-border shadow-sm"
+          ? "bg-background/85 backdrop-blur-xl border-b border-border/50 shadow-sm"
           : "bg-transparent"
       }`}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-primary">JA</span>
-          </Link>
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <Link
+          href={withLocale(locale, "/")}
+          className="group flex items-center gap-2"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl btn-primary shadow-sm transition-shadow group-hover:shadow-md">
+            <span className="text-sm font-bold text-white">JA</span>
+          </div>
+          <span className="hidden text-sm font-semibold text-foreground/80 transition-colors group-hover:text-foreground sm:block">
+            Jumaa Almarzouk
+          </span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navigation.map((item) => (
+        <div className="hidden items-center gap-0.5 md:flex">
+          {navigation.map((item) => {
+            const sectionId = item.href.split("#")[1] ?? "";
+            const isActive = activeSection === sectionId;
+            return (
               <Link
                 key={item.name}
                 href={item.href}
-                className="px-4 py-2 rounded-md text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-accent/10 transition-colors"
+                className={`relative rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "text-primary"
+                    : "text-foreground/70 hover:bg-secondary/80 hover:text-foreground"
+                }`}
               >
                 {item.name}
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    className="-z-10 absolute inset-0 rounded-lg border border-primary/15 bg-primary/[0.07]"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.45 }}
+                  />
+                )}
               </Link>
-            ))}
-          </div>
-
-          {/* Right Side - Theme Toggle & CTA */}
-          <div className="hidden md:flex items-center space-x-4">
-            <ThemeToggle />
-            <Button asChild size="sm">
-              <Link href="#contact">Kontakt aufnehmen</Link>
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center space-x-2 md:hidden">
-            <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
+            );
+          })}
         </div>
 
-        {/* Mobile Menu */}
+        <div className="hidden items-center gap-2 md:flex">
+          <LocaleSwitcher />
+          <ThemeToggle />
+          <Button asChild size="sm" className="rounded-lg btn-primary shadow-sm">
+            <Link href={`${withLocale(locale, "/")}#contact`}>
+              {m.nav.ctaContact}
+            </Link>
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-1.5 md:hidden">
+          <LocaleSwitcher className="scale-90" />
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-lg"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isMobileMenuOpen ? "close" : "open"}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.12 }}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </motion.span>
+            </AnimatePresence>
+          </Button>
+        </div>
+      </nav>
+
+      <AnimatePresence>
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 top-16 z-50 md:hidden">
-            {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-x-0 top-16 z-40 overflow-hidden md:hidden"
+          >
             <div
-              className="absolute inset-0 bg-background/95 backdrop-blur-lg"
+              className="absolute inset-0 bg-background/95 backdrop-blur-xl"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-
-            {/* Menu Content */}
-            <div className="relative h-full overflow-y-auto">
-              <div className="container mx-auto px-4 py-8">
-                <div className="flex flex-col space-y-1">
-                  {navigation.map((item, index) => (
+            <div className="relative z-10 mx-auto max-w-6xl px-4 py-5">
+              <div className="flex flex-col gap-1">
+                {navigation.map((item, index) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.04, duration: 0.25 }}
+                  >
                     <Link
-                      key={item.name}
                       href={item.href}
-                      className="px-6 py-4 rounded-lg text-lg font-medium text-foreground hover:text-primary hover:bg-primary/10 transition-all border border-transparent hover:border-primary/20"
+                      className="flex items-center rounded-xl border border-transparent px-4 py-3.5 text-base font-medium text-foreground transition-colors hover:border-primary/20 hover:bg-primary/[0.06] hover:text-primary"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      style={{
-                        animationDelay: `${index * 50}ms`,
-                        animation: "slideInRight 0.3s ease-out forwards",
-                      }}
                     >
                       {item.name}
                     </Link>
-                  ))}
-                  <div className="px-6 pt-6">
-                    <Button
-                      asChild
-                      className="w-full"
-                      size="lg"
-                      style={{
-                        animationDelay: `${navigation.length * 50}ms`,
-                        animation: "slideInRight 0.3s ease-out forwards",
-                      }}
+                  </motion.div>
+                ))}
+                <motion.div
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: navigation.length * 0.04 + 0.04,
+                    duration: 0.25,
+                  }}
+                  className="pt-3"
+                >
+                  <Button
+                    asChild
+                    className="w-full rounded-xl btn-primary shadow-md"
+                    size="lg"
+                  >
+                    <Link
+                      href={`${withLocale(locale, "/")}#contact`}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <Link
-                        href="#contact"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Kontakt aufnehmen
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
+                      {m.nav.ctaContact}
+                    </Link>
+                  </Button>
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
-      </nav>
-    </header>
+      </AnimatePresence>
+    </motion.header>
   );
 }
