@@ -61,6 +61,11 @@ export default function Hero() {
     >
       <div className="absolute inset-0 -z-10 dot-pattern opacity-50" />
       <div className="absolute inset-0 -z-10 grid-pattern opacity-25" />
+      <div className="aurora-blob -z-10 left-[-12%] top-[12%] h-80 w-80 bg-primary/15" />
+      <div
+        className="aurora-blob -z-10 right-[-10%] bottom-[8%] h-96 w-96 bg-cyan-500/12"
+        style={{ animationDelay: "4s" }}
+      />
 
       <motion.div
         className="absolute left-1/4 top-1/4 -z-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl"

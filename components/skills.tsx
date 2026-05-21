@@ -12,29 +12,23 @@ import {
 } from "lucide-react";
 import { useI18n } from "@/components/i18n-provider";
 
+type Skill = { name: string; level: number };
+
 const skillBlocks = [
-  {
-    key: "frontend" as const,
-    icon: Code2,
-    color: "text-violet-500",
-    bgColor: "bg-violet-500/10",
-    border: "border-violet-500/20",
-    skills: [
-      "HTML5 & CSS3",
-      "JavaScript (ES6+)",
-      "React.js",
-      "Next.js",
-      "Tailwind CSS",
-      "TypeScript",
-    ],
-  },
   {
     key: "backend" as const,
     icon: Server,
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
     border: "border-blue-500/20",
-    skills: ["Node.js", "PHP", "REST APIs", "Express.js", "Laravel"],
+    skills: [
+      { name: "Laravel", level: 90 },
+      { name: "PHP", level: 92 },
+      { name: "REST APIs", level: 88 },
+      { name: "Eloquent ORM", level: 85 },
+      { name: "Node.js", level: 78 },
+      { name: "Express.js", level: 75 },
+    ] as Skill[],
   },
   {
     key: "databases" as const,
@@ -42,7 +36,27 @@ const skillBlocks = [
     color: "text-cyan-500",
     bgColor: "bg-cyan-500/10",
     border: "border-cyan-500/20",
-    skills: ["MySQL", "MongoDB", "PostgreSQL"],
+    skills: [
+      { name: "MySQL", level: 90 },
+      { name: "MariaDB", level: 82 },
+      { name: "PostgreSQL", level: 70 },
+      { name: "MongoDB", level: 68 },
+    ] as Skill[],
+  },
+  {
+    key: "frontend" as const,
+    icon: Code2,
+    color: "text-violet-500",
+    bgColor: "bg-violet-500/10",
+    border: "border-violet-500/20",
+    skills: [
+      { name: "React.js", level: 90 },
+      { name: "Next.js", level: 88 },
+      { name: "TypeScript", level: 85 },
+      { name: "Tailwind CSS", level: 90 },
+      { name: "JavaScript (ES6+)", level: 92 },
+      { name: "HTML5 & CSS3", level: 95 },
+    ] as Skill[],
   },
   {
     key: "cmsDevops" as const,
@@ -50,7 +64,13 @@ const skillBlocks = [
     color: "text-orange-500",
     bgColor: "bg-orange-500/10",
     border: "border-orange-500/20",
-    skills: ["WordPress", "Git & GitHub", "Docker", "AWS", "CI/CD"],
+    skills: [
+      { name: "WordPress", level: 88 },
+      { name: "Git & GitHub", level: 90 },
+      { name: "Docker", level: 72 },
+      { name: "CI/CD", level: 70 },
+      { name: "AWS", level: 65 },
+    ] as Skill[],
   },
   {
     key: "design" as const,
@@ -58,7 +78,12 @@ const skillBlocks = [
     color: "text-pink-500",
     bgColor: "bg-pink-500/10",
     border: "border-pink-500/20",
-    skills: ["Figma", "Adobe XD", "Responsive Design", "Accessibility"],
+    skills: [
+      { name: "Figma", level: 80 },
+      { name: "Adobe XD", level: 75 },
+      { name: "Responsive Design", level: 92 },
+      { name: "Accessibility", level: 80 },
+    ] as Skill[],
   },
   {
     key: "mobile" as const,
@@ -67,10 +92,10 @@ const skillBlocks = [
     bgColor: "bg-emerald-500/10",
     border: "border-emerald-500/20",
     skills: [
-      "Mobile-First Design",
-      "Progressive Web Apps",
-      "Cross-Browser Testing",
-    ],
+      { name: "Mobile-First Design", level: 90 },
+      { name: "Progressive Web Apps", level: 78 },
+      { name: "Cross-Browser Testing", level: 85 },
+    ] as Skill[],
   },
 ];
 
@@ -85,6 +110,11 @@ export default function Skills() {
       className="relative overflow-hidden py-20 sm:py-24 lg:py-28"
     >
       <div className="absolute inset-0 -z-10 dot-pattern opacity-35" />
+      <div className="aurora-blob -z-10 left-[-10%] top-[10%] h-72 w-72 bg-primary/15" />
+      <div
+        className="aurora-blob -z-10 right-[-8%] bottom-[5%] h-80 w-80 bg-cyan-500/12"
+        style={{ animationDelay: "3s" }}
+      />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-5xl" ref={ref}>
@@ -131,20 +161,37 @@ export default function Skills() {
                     {m.skills.categories[category.key]}
                   </h3>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2.5">
                   {category.skills.map((skill, i) => (
-                    <motion.span
-                      key={skill}
-                      initial={{ opacity: 0, scale: 0.92 }}
-                      animate={inView ? { opacity: 1, scale: 1 } : {}}
+                    <motion.div
+                      key={skill.name}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={inView ? { opacity: 1, x: 0 } : {}}
                       transition={{
-                        duration: 0.28,
-                        delay: index * 0.06 + i * 0.03 + 0.15,
+                        duration: 0.35,
+                        delay: index * 0.06 + i * 0.04 + 0.1,
                       }}
-                      className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${category.bgColor} ${category.color} ${category.border}`}
                     >
-                      {skill}
-                    </motion.span>
+                      <div className="mb-1 flex items-center justify-between">
+                        <span className={`text-xs font-semibold ${category.color}`}>
+                          {skill.name}
+                        </span>
+                        <span className="text-[10px] font-medium text-muted-foreground">
+                          {skill.level}%
+                        </span>
+                      </div>
+                      <div className="skill-bar">
+                        <motion.span
+                          initial={{ width: 0 }}
+                          animate={inView ? { width: `${skill.level}%` } : {}}
+                          transition={{
+                            duration: 0.9,
+                            delay: index * 0.06 + i * 0.04 + 0.2,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
+                        />
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>

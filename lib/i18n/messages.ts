@@ -139,8 +139,8 @@ const de: Messages = {
     greeting: "Hallo, ich bin",
     roleLine: "Fullstack-",
     roleHighlight: "Webentwickler",
-    techTags: ["React", "Next.js", "Node.js", "WordPress"],
-    bio: "Ich baue zuverlässige, schnelle und gut nutzbare Weblösungen — und suche ein Team, in dem ich langfristig mitwachsen kann.",
+    techTags: ["Laravel", "PHP", "MySQL", "React", "Next.js"],
+    bio: "Ich baue zuverlässige, schnelle Weblösungen — Backend mit Laravel/PHP & MySQL, Frontend mit React und Next.js. Ich suche ein Team, in dem ich langfristig mitwachsen kann.",
     ctaProjects: "Ausgewählte Arbeiten",
     ctaContact: "Kontakt für Arbeitgeber",
     cvDownload: "Lebenslauf (PDF)",
@@ -154,7 +154,7 @@ const de: Messages = {
     bio1:
       "Ich bin Fullstack-Webentwickler mit Fokus auf sauberen Code, Performance und klare Kommunikation im Team.",
     bio2:
-      "Mit React, Next.js, Node.js und WordPress bringe ich sowohl Frontend- als auch Backend-Themen von der Idee bis zum Betrieb voran — ideal für eine Rolle in Produkt- oder Agenturteams.",
+      "Mein Backend-Stack ist Laravel/PHP mit MySQL, im Frontend arbeite ich mit React, Next.js und Tailwind. So bringe ich Features von der API bis zum UI in Produktion — passend für Produkt- oder Agenturteams.",
     highlights: [
       {
         title: "Fullstack",
@@ -303,7 +303,7 @@ const de: Messages = {
   },
   footer: {
     tagline:
-      "Fullstack-Webentwickler — Stellensuche. Fokus auf React, Next.js und WordPress.",
+      "Fullstack-Webentwickler — Stellensuche. Fokus auf Laravel, PHP, MySQL, React und Next.js.",
     navTitle: "Navigation",
     contactTitle: "Kontakt",
     builtWith: "Erstellt mit",
@@ -338,8 +338,8 @@ const en: Messages = {
     greeting: "Hi, I'm",
     roleLine: "Full-stack",
     roleHighlight: "Web Developer",
-    techTags: ["React", "Next.js", "Node.js", "WordPress"],
-    bio: "I build reliable, fast, and usable web products — and I'm looking for a team where I can grow long term.",
+    techTags: ["Laravel", "PHP", "MySQL", "React", "Next.js"],
+    bio: "I ship reliable, fast web products — backend with Laravel/PHP & MySQL, frontend with React and Next.js. Looking for a team where I can grow long term.",
     ctaProjects: "Selected work",
     ctaContact: "Contact (hiring)",
     cvDownload: "Résumé (PDF)",
@@ -353,7 +353,7 @@ const en: Messages = {
     bio1:
       "I'm a full-stack web developer focused on clean code, performance, and clear collaboration.",
     bio2:
-      "With React, Next.js, Node.js, and WordPress I take features from idea to production — a good fit for product or agency teams.",
+      "My backend stack is Laravel/PHP with MySQL, paired with React, Next.js, and Tailwind on the frontend. I take features from API to UI in production — a good fit for product or agency teams.",
     highlights: [
       {
         title: "Full-stack",
@@ -502,7 +502,7 @@ const en: Messages = {
   },
   footer: {
     tagline:
-      "Full-stack web developer — open to work. Focus on React, Next.js, and WordPress.",
+      "Full-stack web developer — open to work. Focus on Laravel, PHP, MySQL, React, and Next.js.",
     navTitle: "Navigation",
     contactTitle: "Contact",
     builtWith: "Built with",
