@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/components/i18n-provider";
 import { withLocale } from "@/lib/i18n/paths";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { SITE } from "@/lib/site";
 
 export default function Header() {
   const { locale, messages: m } = useI18n();
@@ -105,6 +106,12 @@ export default function Header() {
         <div className="hidden items-center gap-2 md:flex">
           <LocaleSwitcher />
           <ThemeToggle />
+          <Button asChild size="sm" variant="outline" className="rounded-lg">
+            <a href={SITE.cvPath} download>
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              {m.hero.cvDownload}
+            </a>
+          </Button>
           <Button asChild size="sm" className="rounded-lg btn-primary shadow-sm">
             <Link href={`${withLocale(locale, "/")}#contact`}>
               {m.nav.ctaContact}
@@ -180,6 +187,21 @@ export default function Header() {
                   }}
                   className="pt-3"
                 >
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="mb-2 w-full rounded-xl"
+                    size="lg"
+                  >
+                    <a
+                      href={SITE.cvPath}
+                      download
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      {m.hero.cvDownload}
+                    </a>
+                  </Button>
                   <Button
                     asChild
                     className="w-full rounded-xl btn-primary shadow-md"

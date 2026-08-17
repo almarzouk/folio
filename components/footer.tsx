@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Linkedin, Mail, Heart, Code2, MapPin } from "lucide-react";
+import { Github, Linkedin, Mail, Heart, Code2, MapPin, Phone } from "lucide-react";
 import { useI18n } from "@/components/i18n-provider";
 import { withLocale } from "@/lib/i18n/paths";
+import { SITE } from "@/lib/site";
 
 export default function Footer() {
   const { locale, messages: m } = useI18n();
@@ -19,13 +20,14 @@ export default function Footer() {
   ];
 
   const social = [
-    { name: "GitHub", href: "https://github.com/almarzouk", icon: Github },
+    { name: "GitHub", href: SITE.github, icon: Github },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com/in/almarzouk",
+      href: SITE.linkedin,
       icon: Linkedin,
     },
-    { name: "E-Mail", href: "mailto:jumaa.almarzouk@gmail.com", icon: Mail },
+    { name: "E-Mail", href: `mailto:${SITE.email}`, icon: Mail },
+    { name: "Telefon", href: SITE.phoneHref, icon: Phone },
   ];
 
   return (
@@ -49,7 +51,7 @@ export default function Footer() {
               </p>
               <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden />
-                Haselünne, Germany
+                {SITE.locationLine}
               </p>
             </div>
 
@@ -77,10 +79,16 @@ export default function Footer() {
               </h3>
               <div className="space-y-3">
                 <Link
-                  href="mailto:jumaa.almarzouk@gmail.com"
+                  href={`mailto:${SITE.email}`}
                   className="block text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
-                  jumaa.almarzouk@gmail.com
+                  {SITE.email}
+                </Link>
+                <Link
+                  href={SITE.phoneHref}
+                  className="block text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {SITE.phoneDisplay}
                 </Link>
                 <div className="flex flex-wrap gap-2">
                   {social.map((item) => (

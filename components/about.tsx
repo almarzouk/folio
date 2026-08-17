@@ -76,6 +76,16 @@ export default function About() {
               <p className="text-lg leading-relaxed text-muted-foreground">
                 {m.about.bio2}
               </p>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {m.about.facts.map((fact) => (
+                  <span
+                    key={fact}
+                    className="rounded-full border border-primary/20 bg-primary/[0.06] px-3 py-1 text-xs font-medium text-primary"
+                  >
+                    {fact}
+                  </span>
+                ))}
+              </div>
             </motion.div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

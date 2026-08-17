@@ -7,20 +7,34 @@ export type ProjectCategoryKey =
   | "static"
   | "tailwind";
 
+export type CaseStudyContent = {
+  problem: string;
+  solution: string;
+  role: string;
+  highlights: string[];
+  challenges: string[];
+};
+
 export type LocalizedProject = {
   title: string;
   description: string;
   longDescription: string;
+  caseStudy?: CaseStudyContent;
 };
 
 export type PortfolioProject = {
   id: string;
   categoryKey: ProjectCategoryKey;
   featured: boolean;
+  /** Hidden from main grid; shown in archive section */
+  archived?: boolean;
+  hasCaseStudy?: boolean;
   images: string[];
   technologies: string[];
   github: string;
   live: string;
+  /** API docs, Postman collection, etc. */
+  docs?: string;
   de: LocalizedProject;
   en: LocalizedProject;
 };
@@ -32,11 +46,28 @@ export function projectCopy(
   return locale === "en" ? p.en : p.de;
 }
 
+export function getProjectById(id: string): PortfolioProject | undefined {
+  return portfolioProjects.find((p) => p.id === id);
+}
+
+export function getCaseStudyProjects(): PortfolioProject[] {
+  return portfolioProjects.filter((p) => p.hasCaseStudy);
+}
+
+export function getVisibleProjects(): PortfolioProject[] {
+  return portfolioProjects.filter((p) => !p.archived);
+}
+
+export function getArchivedProjects(): PortfolioProject[] {
+  return portfolioProjects.filter((p) => p.archived);
+}
+
 export const portfolioProjects: PortfolioProject[] = [
   {
     id: "kfz-werkstatt",
     categoryKey: "php",
     featured: true,
+    hasCaseStudy: true,
     images: [
       "/projects/kfz-01.png",
       "/projects/kfz-02.png",
@@ -46,6 +77,14 @@ export const portfolioProjects: PortfolioProject[] = [
       "/projects/kfz-06.png",
       "/projects/kfz-07.png",
       "/projects/kfz-08.png",
+      "/projects/kfz-09.png",
+      "/projects/kfz-10.png",
+      "/projects/kfz-11.png",
+      "/projects/kfz-12.png",
+      "/projects/kfz-13.png",
+      "/projects/kfz-14.png",
+      "/projects/kfz-15.png",
+      "/projects/kfz-16.png",
     ],
     technologies: [
       "Laravel",
@@ -63,6 +102,24 @@ export const portfolioProjects: PortfolioProject[] = [
         "Laravel-System für Kfz-Werkstätten: Aufträge, Kunden, Fahrzeuge und Status.",
       longDescription:
         "Backend und Oberflächen für typische Werkstattabläufe — strukturierte Datenmodelle, Rollen und nachvollziehbare Workflows für Team und Kundendialog.",
+      caseStudy: {
+        problem:
+          "Werkstätten verwalten Kunden, Fahrzeuge und Reparaturaufträge oft in Tabellen oder isolierten Tools — ohne zentrale Übersicht über Status, Historie und Teamzugriff.",
+        solution:
+          "Laravel-Anwendung mit durchdachtem Datenmodell (Kunden, Fahrzeuge, Aufträge, Status), Blade-Oberflächen für den Werkstattalltag und klaren Workflows für Mitarbeitende.",
+        role: "Konzeption und Umsetzung: Backend-Logik, Datenbankdesign, Oberflächen und typische Werkstatt-Prozesse.",
+        highlights: [
+          "Strukturierte Entitäten: Kunden, Fahrzeuge, Aufträge",
+          "Status-Tracking für Reparaturabläufe",
+          "Rollenbasierter Zugriff im Team",
+          "Übersichtliche Admin-Oberflächen mit Blade",
+        ],
+        challenges: [
+          "Abbildung realer Werkstattabläufe in einem flexiblen Datenmodell",
+          "Nachvollziehbare Statusübergänge ohne unnötige Komplexität",
+          "Skalierbare Laravel-Struktur (MVC, Eloquent, Migrationen)",
+        ],
+      },
     },
     en: {
       title: "KFZ — workshop & customer management",
@@ -70,12 +127,31 @@ export const portfolioProjects: PortfolioProject[] = [
         "Laravel app for auto workshops: jobs, customers, vehicles, and status.",
       longDescription:
         "Backend and UI for common workshop flows — clear data models, roles, and traceable workflows for staff and customer communication.",
+      caseStudy: {
+        problem:
+          "Workshops often manage customers, vehicles, and repair jobs in spreadsheets or disconnected tools — without a central view of status, history, and team access.",
+        solution:
+          "A Laravel app with a clear domain model (customers, vehicles, jobs, status), Blade UI for daily workshop work, and workflows built for staff.",
+        role: "Concept and delivery: backend logic, database design, UI, and typical workshop processes.",
+        highlights: [
+          "Structured entities: customers, vehicles, jobs",
+          "Status tracking for repair workflows",
+          "Role-based team access",
+          "Clear admin UI with Blade",
+        ],
+        challenges: [
+          "Mapping real workshop flows into a flexible data model",
+          "Traceable status transitions without over-engineering",
+          "Scalable Laravel structure (MVC, Eloquent, migrations)",
+        ],
+      },
     },
   },
   {
     id: "tms-backend",
     categoryKey: "php",
     featured: true,
+    hasCaseStudy: true,
     images: [
       "/projects/ticket-management-system-01.png",
       "/projects/ticket-management-system-02.png",
@@ -95,12 +171,31 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     github: "https://github.com/almarzouk/tms-backend",
     live: "#",
+    docs: "https://github.com/almarzouk/tms-backend/blob/main/API_DOCUMENTATION.md",
     de: {
       title: "TMS — Ticket-Management (Backend)",
       description:
         "Laravel-API für Tickets, Prioritäten, Zuweisungen und Team-Kollaboration.",
       longDescription:
         "Fokus auf saubere API-Schicht, Dokumentation (Postman) und erweiterbare Domänenlogik — geeignet als Basis für Web- oder Mobile-Clients.",
+      caseStudy: {
+        problem:
+          "Teams brauchen eine zentrale Ticket-API mit Prioritäten, Zuweisungen und nachvollziehbarer Historie — unabhängig vom Frontend (Web oder Mobile).",
+        solution:
+          "Laravel REST-API mit Authentifizierung, Ticket-Domäne, Postman-Collection und dokumentierten Endpunkten als Basis für beliebige Clients.",
+        role: "Backend-Entwicklung: API-Design, Business-Logik, Auth, MySQL/Eloquent und API-Dokumentation.",
+        highlights: [
+          "RESTful Endpunkte für Tickets & Zuweisungen",
+          "Prioritäten, Status und Team-Kollaboration",
+          "Postman-Collection & API-Dokumentation",
+          "Erweiterbar für Web- und Mobile-Frontends",
+        ],
+        challenges: [
+          "Saubere Trennung von API-Schicht und Domänenlogik",
+          "Konsistente Auth- und Berechtigungsstruktur",
+          "Dokumentation, die Recruiter und Entwickler schnell verstehen",
+        ],
+      },
     },
     en: {
       title: "TMS — ticket management (API backend)",
@@ -108,6 +203,24 @@ export const portfolioProjects: PortfolioProject[] = [
         "Laravel API for tickets, priorities, assignments, and team collaboration.",
       longDescription:
         "Emphasis on a clean API surface, Postman-ready docs, and extensible domain logic — a solid base for web or mobile clients.",
+      caseStudy: {
+        problem:
+          "Teams need a central ticket API with priorities, assignments, and traceable history — independent of the frontend (web or mobile).",
+        solution:
+          "A Laravel REST API with authentication, ticket domain logic, Postman collection, and documented endpoints as a base for any client.",
+        role: "Backend development: API design, business logic, auth, MySQL/Eloquent, and API documentation.",
+        highlights: [
+          "RESTful endpoints for tickets & assignments",
+          "Priorities, status, and team collaboration",
+          "Postman collection & API documentation",
+          "Extensible for web and mobile frontends",
+        ],
+        challenges: [
+          "Clean separation of API layer and domain logic",
+          "Consistent auth and permission structure",
+          "Documentation that recruiters and developers can grasp quickly",
+        ],
+      },
     },
   },
   {
@@ -122,7 +235,7 @@ export const portfolioProjects: PortfolioProject[] = [
       "/projects/Mein Termin SAAS APP - Laravel - 5.png",
     ],
     technologies: ["Laravel", "Vue.js", "MySQL", "Tailwind CSS", "PHP"],
-    github: "https://github.com/almarzouk/termin/blob/main/README.md",
+    github: "https://github.com/almarzouk/termin",
     live: "#",
     de: {
       title: "Mein Termin — SaaS",
@@ -135,33 +248,6 @@ export const portfolioProjects: PortfolioProject[] = [
       description: "Appointment SaaS built with Laravel and Vue.js.",
       longDescription:
         "A SaaS product for scheduling, notifications, and reporting — focused on UX and admin workflows.",
-    },
-  },
-  {
-    id: "php-job-portal",
-    categoryKey: "php",
-    featured: false,
-    images: [
-      "/projects/Job Portal Laravel - 1.png",
-      "/projects/Job Portal Laravel - 2.png",
-      "/projects/Job Portal Laravel - 3.png",
-      "/projects/Job Portal Laravel - 4.png",
-      "/projects/Job Portal Laravel - 5.png",
-    ],
-    technologies: ["PHP", "MySQL", "JavaScript", "Bootstrap", "HTML5", "CSS3"],
-    github: "https://github.com/almarzouk/my-jobs",
-    live: "#",
-    de: {
-      title: "PHP Job-Portal",
-      description: "Job-Portal mit Stellen, Bewerbungen und Admin-Bereich.",
-      longDescription:
-        "End-to-End-Portal für Arbeitgeber und Kandidaten inkl. Bewerbungsflow und Verwaltung.",
-    },
-    en: {
-      title: "PHP job portal",
-      description: "Job board with listings, applications, and admin tools.",
-      longDescription:
-        "An end-to-end portal for employers and candidates including application flows and dashboards.",
     },
   },
   {
@@ -186,24 +272,30 @@ export const portfolioProjects: PortfolioProject[] = [
     },
   },
   {
-    id: "mern-job-portal",
-    categoryKey: "reactjs",
+    id: "php-job-portal",
+    categoryKey: "php",
     featured: false,
-    images: ["/projects/Job Portal nextjs.png"],
-    github: "#",
-    live: "https://jop-portal-client.vercel.app/",
-    technologies: ["React", "Node.js", "MongoDB", "Express", "Redux", "JWT"],
+    images: [
+      "/projects/Job Portal Laravel - 1.png",
+      "/projects/Job Portal Laravel - 2.png",
+      "/projects/Job Portal Laravel - 3.png",
+      "/projects/Job Portal Laravel - 4.png",
+      "/projects/Job Portal Laravel - 5.png",
+    ],
+    technologies: ["PHP", "Laravel", "MySQL", "JavaScript", "Bootstrap"],
+    github: "https://github.com/almarzouk/my-jobs",
+    live: "#",
     de: {
-      title: "MERN Job-Portal",
-      description: "Full-Stack-Portal mit MERN-Stack.",
+      title: "PHP Job-Portal",
+      description: "Job-Portal mit Stellen, Bewerbungen und Admin-Bereich.",
       longDescription:
-        "Jobsuche, Bewerbungen und APIs mit MongoDB, Express, React und Node.",
+        "End-to-End-Portal für Arbeitgeber und Kandidaten inkl. Bewerbungsflow und Verwaltung.",
     },
     en: {
-      title: "MERN job portal",
-      description: "Full-stack job board on the MERN stack.",
+      title: "PHP job portal",
+      description: "Job board with listings, applications, and admin tools.",
       longDescription:
-        "Job search, applications, and APIs using MongoDB, Express, React, and Node.",
+        "An end-to-end portal for employers and candidates including application flows and dashboards.",
     },
   },
   {
@@ -228,6 +320,27 @@ export const portfolioProjects: PortfolioProject[] = [
     },
   },
   {
+    id: "mern-job-portal",
+    categoryKey: "reactjs",
+    featured: false,
+    images: ["/projects/Job Portal nextjs.png"],
+    github: "#",
+    live: "https://jop-portal-client.vercel.app/",
+    technologies: ["React", "Node.js", "MongoDB", "Express", "Redux", "JWT"],
+    de: {
+      title: "MERN Job-Portal",
+      description: "Full-Stack-Portal mit MERN-Stack.",
+      longDescription:
+        "Jobsuche, Bewerbungen und APIs mit MongoDB, Express, React und Node.",
+    },
+    en: {
+      title: "MERN job portal",
+      description: "Full-stack job board on the MERN stack.",
+      longDescription:
+        "Job search, applications, and APIs using MongoDB, Express, React, and Node.",
+    },
+  },
+  {
     id: "amazon-clone",
     categoryKey: "reactjs",
     featured: false,
@@ -246,63 +359,6 @@ export const portfolioProjects: PortfolioProject[] = [
       description: "Frontend exercise with catalog and cart.",
       longDescription:
         "Responsive product UI, filters, and cart — focused on component structure.",
-    },
-  },
-  {
-    id: "realvine",
-    categoryKey: "static",
-    featured: false,
-    images: ["/projects/Realvine.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/realvine/",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    de: {
-      title: "Realvine — Immobilien LP",
-      description: "Landingpage für Immobilien mit Kontakt.",
-      longDescription: "Galerie, Highlights und Formular — mobil optimiert.",
-    },
-    en: {
-      title: "Realvine — real estate LP",
-      description: "Property landing page with contact flow.",
-      longDescription: "Gallery, highlights, and form — mobile optimized.",
-    },
-  },
-  {
-    id: "hoolix",
-    categoryKey: "static",
-    featured: false,
-    images: ["/projects/Hoolix.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/hoolix/",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    de: {
-      title: "Hoolix — Marketing LP",
-      description: "Services, Portfolio und Lead-Capture.",
-      longDescription: "Marketing-Seite mit Sektionen und Call-to-Actions.",
-    },
-    en: {
-      title: "Hoolix — marketing LP",
-      description: "Services, portfolio, and lead capture.",
-      longDescription: "A marketing site with sections and strong CTAs.",
-    },
-  },
-  {
-    id: "dentelo",
-    categoryKey: "static",
-    featured: false,
-    images: ["/projects/Dentelo.jpg"],
-    github: "#",
-    live: "https://almarzouk.github.io/dentelo/",
-    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
-    de: {
-      title: "Dentelo — Praxis-Website",
-      description: "Landingpage für eine Zahnarztpraxis.",
-      longDescription: "Termin-CTA, Leistungen und vertrauensbildende Inhalte.",
-    },
-    en: {
-      title: "Dentelo — dental practice site",
-      description: "Landing page for a dental practice.",
-      longDescription: "Appointment CTAs, services, and trust-building content.",
     },
   },
   {
@@ -325,9 +381,70 @@ export const portfolioProjects: PortfolioProject[] = [
     },
   },
   {
+    id: "realvine",
+    categoryKey: "static",
+    featured: false,
+    archived: true,
+    images: ["/projects/Realvine.jpg"],
+    github: "#",
+    live: "https://almarzouk.github.io/realvine/",
+    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
+    de: {
+      title: "Realvine — Immobilien LP",
+      description: "Landingpage für Immobilien mit Kontakt.",
+      longDescription: "Galerie, Highlights und Formular — mobil optimiert.",
+    },
+    en: {
+      title: "Realvine — real estate LP",
+      description: "Property landing page with contact flow.",
+      longDescription: "Gallery, highlights, and form — mobile optimized.",
+    },
+  },
+  {
+    id: "hoolix",
+    categoryKey: "static",
+    featured: false,
+    archived: true,
+    images: ["/projects/Hoolix.jpg"],
+    github: "#",
+    live: "https://almarzouk.github.io/hoolix/",
+    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
+    de: {
+      title: "Hoolix — Marketing LP",
+      description: "Services, Portfolio und Lead-Capture.",
+      longDescription: "Marketing-Seite mit Sektionen und Call-to-Actions.",
+    },
+    en: {
+      title: "Hoolix — marketing LP",
+      description: "Services, portfolio, and lead capture.",
+      longDescription: "A marketing site with sections and strong CTAs.",
+    },
+  },
+  {
+    id: "dentelo",
+    categoryKey: "static",
+    featured: false,
+    archived: true,
+    images: ["/projects/Dentelo.jpg"],
+    github: "#",
+    live: "https://almarzouk.github.io/dentelo/",
+    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap"],
+    de: {
+      title: "Dentelo — Praxis-Website",
+      description: "Landingpage für eine Zahnarztpraxis.",
+      longDescription: "Termin-CTA, Leistungen und vertrauensbildende Inhalte.",
+    },
+    en: {
+      title: "Dentelo — dental practice site",
+      description: "Landing page for a dental practice.",
+      longDescription: "Appointment CTAs, services, and trust-building content.",
+    },
+  },
+  {
     id: "loruki",
     categoryKey: "static",
     featured: false,
+    archived: true,
     images: ["/projects/loruki.jpg"],
     github: "#",
     live: "https://almarzouk.github.io/loruki-website/",
@@ -347,6 +464,7 @@ export const portfolioProjects: PortfolioProject[] = [
     id: "flower",
     categoryKey: "static",
     featured: false,
+    archived: true,
     images: ["/projects/flower.jpg"],
     github: "#",
     live: "https://almarzouk.github.io/theflow/",
@@ -366,6 +484,7 @@ export const portfolioProjects: PortfolioProject[] = [
     id: "applab",
     categoryKey: "static",
     featured: false,
+    archived: true,
     images: ["/projects/Applap.jpg"],
     github: "#",
     live: "https://almarzouk.github.io/applab/",
@@ -385,6 +504,7 @@ export const portfolioProjects: PortfolioProject[] = [
     id: "tailwind-manage",
     categoryKey: "tailwind",
     featured: false,
+    archived: true,
     images: ["/projects/Manage.jpg"],
     github: "#",
     live: "https://almarzouk.github.io/manage-tailwind/",

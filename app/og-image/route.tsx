@@ -66,7 +66,7 @@ export async function GET() {
               textAlign: "center",
             }}
           >
-            Fullstack Webentwickler
+            Fullstack Web & Mobile Developer
           </div>
 
           <div
@@ -77,7 +77,7 @@ export async function GET() {
               justifyContent: "center",
             }}
           >
-            {["React", "Next.js", "WordPress", "Node.js"].map((tech) => (
+            {["Laravel", "React", "Next.js", "React Native"].map((tech) => (
               <div
                 key={tech}
                 style={{
@@ -102,7 +102,7 @@ export async function GET() {
               color: "#94a3b8",
             }}
           >
-            Haselünne · Deutschland
+            Haselünne · Meppen / Emsland
           </div>
         </div>
       </div>

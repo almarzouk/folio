@@ -8,13 +8,16 @@ import { Button } from "./ui/button";
 import {
   Mail,
   MapPin,
+  Phone,
   Send,
   Github,
   Linkedin,
   CheckCircle2,
+  Download,
 } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/components/i18n-provider";
+import { SITE } from "@/lib/site";
 
 export default function Contact() {
   const { locale, messages: m } = useI18n();
@@ -43,9 +46,10 @@ ${m.contact.autoresponseSignature}
 
 ---
 Haselünne, Germany
-jumaa.almarzouk@gmail.com
-https://linkedin.com/in/almarzouk
-https://github.com/almarzouk`;
+${SITE.email}
+${SITE.phoneDisplay}
+${SITE.linkedin}
+${SITE.github}`;
 
     try {
       const response = await fetch("https://formspree.io/f/mrbnbbvo", {
@@ -131,10 +135,22 @@ https://github.com/almarzouk`;
                   title: m.contact.email,
                   content: (
                     <Link
-                      href="mailto:jumaa.almarzouk@gmail.com"
+                      href={`mailto:${SITE.email}`}
                       className="text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
-                      jumaa.almarzouk@gmail.com
+                      {SITE.email}
+                    </Link>
+                  ),
+                },
+                {
+                  icon: Phone,
+                  title: m.contact.phone,
+                  content: (
+                    <Link
+                      href={SITE.phoneHref}
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {SITE.phoneDisplay}
                     </Link>
                   ),
                 },
@@ -143,7 +159,7 @@ https://github.com/almarzouk`;
                   title: m.contact.location,
                   content: (
                     <p className="text-sm text-muted-foreground">
-                      Haselünne, Emsland
+                      {SITE.locationLine}
                       <br />
                       Germany
                     </p>
@@ -169,12 +185,12 @@ https://github.com/almarzouk`;
                 <div className="flex flex-col gap-2">
                   {[
                     {
-                      href: "https://github.com/almarzouk",
+                      href: SITE.github,
                       Icon: Github,
                       label: "GitHub",
                     },
                     {
-                      href: "https://linkedin.com/in/almarzouk",
+                      href: SITE.linkedin,
                       Icon: Linkedin,
                       label: "LinkedIn",
                     },
@@ -205,6 +221,14 @@ https://github.com/almarzouk`;
                 <p className="text-sm text-muted-foreground">
                   {m.contact.availabilityText}
                 </p>
+                <a
+                  href={SITE.cvPath}
+                  download
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:underline"
+                >
+                  <Download className="h-4 w-4" />
+                  {m.contact.cvDownload}
+                </a>
               </div>
             </motion.div>
 

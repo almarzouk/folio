@@ -3,6 +3,7 @@
 import React from "react";
 import Script from "next/script";
 import { useI18n } from "@/components/i18n-provider";
+import { SITE } from "@/lib/site";
 
 interface JsonLdProps {
   data: object;
@@ -19,8 +20,6 @@ export default function JsonLd({ data, id }: JsonLdProps) {
   );
 }
 
-const SITE = "https://jumaa-portfolio.vercel.app";
-
 export function PersonSchema() {
   const { messages: m } = useI18n();
   const schema = {
@@ -29,30 +28,31 @@ export function PersonSchema() {
     name: "Jumaa Almarzouk",
     jobTitle: m.jsonLd.jobTitle,
     description: m.jsonLd.personDescription,
-    url: SITE,
-    image: `${SITE}/photo.png`,
-    email: "jumaa.almarzouk@gmail.com",
+    url: SITE.portfolio,
+    image: `${SITE.portfolio}/photo.png`,
+    email: SITE.email,
+    telephone: "+4917674724437",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Haselünne",
       addressRegion: "Emsland",
       addressCountry: "DE",
     },
-    sameAs: [
-      "https://github.com/almarzouk",
-      "https://linkedin.com/in/almarzouk",
-    ],
+    sameAs: [SITE.github, SITE.linkedin],
     knowsAbout: [
-      "React",
-      "Next.js",
-      "WordPress",
       "PHP",
       "Laravel",
-      "TypeScript",
+      "React",
+      "Next.js",
+      "Vue.js",
+      "React Native",
+      "MySQL",
+      "REST APIs",
       "JavaScript",
       "Node.js",
       "Tailwind CSS",
       "Web Development",
+      "Mobile Development",
     ],
   };
 
@@ -84,20 +84,20 @@ export function BlogPostingSchema({
     author: {
       "@type": "Person",
       name: author,
-      url: SITE,
+      url: SITE.portfolio,
     },
     publisher: {
       "@type": "Person",
       name: "Jumaa Almarzouk",
       logo: {
         "@type": "ImageObject",
-        url: `${SITE}/JA.png`,
+        url: `${SITE.portfolio}/JA.png`,
       },
     },
     datePublished: datePublished,
     dateModified: dateModified || datePublished,
     url: url,
-    image: image || `${SITE}/og-image`,
+    image: image || `${SITE.portfolio}/og-image`,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": url,
@@ -114,14 +114,14 @@ export function WebsiteSchema() {
     "@type": "WebSite",
     name: "Jumaa Almarzouk",
     description: m.jsonLd.websiteDescription,
-    url: SITE,
+    url: SITE.portfolio,
     author: {
       "@type": "Person",
       name: "Jumaa Almarzouk",
     },
     potentialAction: {
       "@type": "SearchAction",
-      target: `${SITE}/blog?search={search_term_string}`,
+      target: `${SITE.portfolio}/blog?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };

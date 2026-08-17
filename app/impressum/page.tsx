@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Fragment } from "react";
-import { Mail, MapPin, Building2 } from "lucide-react";
+import { Mail, MapPin, Building2, Phone } from "lucide-react";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Impressum | Jumaa Almarzouk",
@@ -38,15 +39,15 @@ export default function ImpressumPage() {
                     <p className="font-medium text-foreground text-lg">
                       Jumaa Almarzouk
                     </p>
-                    <p className="text-sm mt-1">Fullstack Webentwickler</p>
+                    <p className="text-sm mt-1">Fullstack Web & Mobile Developer</p>
                   </div>
 
                   <div className="flex items-start gap-3 pt-2">
                     <MapPin className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium text-foreground">Adresse</p>
-                      <p>Haselünne</p>
-                      <p>Emsland, Deutschland</p>
+                      <p>Haselünne (Raum Meppen / Emsland)</p>
+                      <p>Deutschland</p>
                     </div>
                   </div>
 
@@ -55,10 +56,23 @@ export default function ImpressumPage() {
                     <div>
                       <p className="font-medium text-foreground">Kontakt</p>
                       <a
-                        href="mailto:jumaa.almarzouk@gmail.com"
+                        href={`mailto:${SITE.email}`}
                         className="text-primary hover:underline"
                       >
-                        jumaa.almarzouk@gmail.com
+                        {SITE.email}
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Phone className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-foreground">Telefon</p>
+                      <a
+                        href={SITE.phoneHref}
+                        className="text-primary hover:underline"
+                      >
+                        {SITE.phoneDisplay}
                       </a>
                     </div>
                   </div>

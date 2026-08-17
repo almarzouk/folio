@@ -31,6 +31,7 @@ export type Messages = {
     bio1: string;
     bio2: string;
     highlights: { title: string; description: string }[];
+    facts: string[];
     timelineTitle: string;
     timelineTitleAccent: string;
     currentLabel: string;
@@ -57,6 +58,11 @@ export type Messages = {
     extrasTitle: string;
     extrasTitleAccent: string;
     extras: string[];
+    levels: {
+      production: string;
+      daily: string;
+      familiar: string;
+    };
   };
   projects: {
     title: string;
@@ -76,13 +82,30 @@ export type Messages = {
     modalNext: string;
     modalImage: string;
     modalDot: string;
+    caseStudyLabel: string;
+    viewCaseStudy: string;
+    backToProjects: string;
+    caseStudyProblem: string;
+    caseStudySolution: string;
+    caseStudyRole: string;
+    caseStudyHighlights: string;
+    caseStudyChallenges: string;
+    caseStudyGallery: string;
+    apiDocs: string;
+    archiveTitle: string;
+    archiveSubtitle: string;
+    archiveSubtitleText: string;
+    showArchive: string;
+    hideArchive: string;
   };
   contact: {
     title: string;
     titleAccent: string;
     subtitle: string;
     email: string;
+    phone: string;
     location: string;
+    cvDownload: string;
     social: string;
     availabilityTitle: string;
     availabilityText: string;
@@ -117,13 +140,21 @@ export type Messages = {
     websiteDescription: string;
     jobTitle: string;
   };
+  openToWork: {
+    badge: string;
+    title: string;
+    titleAccent: string;
+    subtitle: string;
+    ctaContact: string;
+    items: { title: string; description: string }[];
+  };
 };
 
 const de: Messages = {
   meta: {
-    title: "Jumaa Almarzouk | Fullstack-Webentwickler — Stellensuche",
+    title: "Jumaa Almarzouk | Fullstack Web & Mobile Developer — Stellensuche",
     description:
-      "Fullstack-Webentwickler (React, Next.js, WordPress) sucht eine Festanstellung in Deutschland. Standort Haselünne — Remote oder Hybrid möglich.",
+      "Fullstack Web & Mobile Developer (PHP, Laravel, React, Next.js, Vue.js, React Native) sucht eine Fullstack-/Backend-Position im Raum Meppen & Emsland. Standort: Haselünne.",
   },
   nav: {
     home: "Start",
@@ -135,79 +166,85 @@ const de: Messages = {
     ctaContact: "Kennenlernen",
   },
   hero: {
-    badge: "Aktuell: Stellensuche (Festanstellung)",
+    badge: "Stellensuche · Raum Meppen & Emsland",
     greeting: "Hallo, ich bin",
-    roleLine: "Fullstack-",
-    roleHighlight: "Webentwickler",
-    techTags: ["Laravel", "PHP", "MySQL", "React", "Next.js"],
-    bio: "Ich baue zuverlässige, schnelle Weblösungen — Backend mit Laravel/PHP & MySQL, Frontend mit React und Next.js. Ich suche ein Team, in dem ich langfristig mitwachsen kann.",
+    roleLine: "Fullstack Web & Mobile",
+    roleHighlight: "Developer",
+    techTags: ["PHP", "Laravel", "React", "Next.js", "Vue.js", "React Native"],
+    bio: "Fullstack-Entwicklung mit Schwerpunkt Backend (PHP, Laravel) sowie modernen Frontends und Mobile-Apps (Next.js, React, Vue.js, React Native). Gesucht: Fullstack- oder Backend-orientierte Position im Raum Meppen & Emsland.",
     ctaProjects: "Ausgewählte Arbeiten",
     ctaContact: "Kontakt für Arbeitgeber",
     cvDownload: "Lebenslauf (PDF)",
-    expBadge: "5+ Jahre Erfahrung",
-    projectsBadge: "20+ Projekte",
+    expBadge: "Laravel · Mobile",
+    projectsBadge: "Web & Apps",
   },
   about: {
     title: "Über",
     titleAccent: "mich",
-    locationLine: "Haselünne, Emsland · Deutschland",
+    locationLine: "Haselünne (Raum Meppen / Emsland) · Deutschland",
     bio1:
-      "Ich bin Fullstack-Webentwickler mit Fokus auf sauberen Code, Performance und klare Kommunikation im Team.",
+      "Fullstack Web & Mobile Developer mit Schwerpunkt Backend-Entwicklung (PHP, Laravel) sowie modernen Frontend- und Mobile-Technologien (Next.js, React, Vue.js, React Native).",
     bio2:
-      "Mein Backend-Stack ist Laravel/PHP mit MySQL, im Frontend arbeite ich mit React, Next.js und Tailwind. So bringe ich Features von der API bis zum UI in Produktion — passend für Produkt- oder Agenturteams.",
+      "Erfahrung in skalierbaren Webanwendungen, REST APIs, Authentifizierung, Datenbankdesign und plattformübergreifenden Apps. Strukturiert, lösungsorientiert und erfahren in agilen Teams.",
     highlights: [
       {
         title: "Fullstack",
-        description: "Moderne Frontends und stabile APIs & Backends",
+        description: "Laravel-Backends, REST APIs und moderne Frontends",
       },
       {
-        title: "Berufserfahrung",
-        description: "WordPress, Themes, Performance und Teamarbeit",
+        title: "Mobile",
+        description: "Plattformübergreifende Apps mit React Native",
       },
       {
-        title: "Weiterbildung",
-        description: "Aktuell zu Best Practices und neuen Web-APIs",
+        title: "Ausbildung",
+        description: "Full Stack Webentwickler — AFPA, Frankreich",
       },
       {
         title: "Sprachen",
-        description: "Deutsch (B1) · Englisch (B2) · Arabisch (Muttersprache)",
+        description:
+          "Arabisch (Muttersprache) · Deutsch (B1) · Englisch (B2) · Französisch (B1)",
       },
+    ],
+    facts: [
+      "Deutsch B1",
+      "Englisch B2",
+      "Französisch B1",
+      "Arabisch Muttersprache",
+      "Führerschein B",
+      "Eigenes Fahrzeug",
+      "Reisebereit (DE)",
     ],
     timelineTitle: "Beruflicher",
     timelineTitleAccent: "Werdegang",
     currentLabel: "Aktuell",
     timeline: [
       {
-        period: "2024 – heute",
-        role: "WordPress- & Frontend-Entwickler",
-        company: "Eilinghoff + Team GmbH, Deutschland",
+        period: "04/2026 – heute",
+        role: "Fullstack Web Developer (Laravel, Next.js, React, Vue.js, React Native)",
+        company: "Dream Soft GmbH — Haselünne",
         description:
-          "WordPress-Websites, Theme-Entwicklung, Performance und Frontend-Lösungen im Kundenprojekt.",
+          "Fullstack-Entwicklung mit Laravel (Backend) sowie Next.js, React und Vue.js (Frontend). Aufbau eines digitalen Serviceportals zur Nachverfolgung von Produktions- und Serviceabläufen. Plattformübergreifende Mobile-Apps mit React Native — eigenverantwortlich als alleiniger Fullstack-Entwickler im Projekt.",
         current: true,
       },
       {
-        period: "2023",
-        role: "Diplom — Front- & Backend-Entwicklung",
-        company: "AFPA, Frankreich",
-        description: "Intensive Ausbildung in moderner Webentwicklung.",
+        period: "06/2024 – 03/2026",
+        role: "Fullstack Web Developer (PHP / Laravel Fokus)",
+        company: "Eilinghoff + Team — Rheine",
+        description:
+          "Backend-Entwicklung mit PHP & Laravel: REST APIs, Business-Logik, MySQL & Eloquent, Performance-Optimierung und MVC-Struktur. Agile Teamarbeit und Deployment.",
       },
       {
-        period: "2022",
-        role: "Praktikum — WordPress-Entwickler",
-        company: "Foreigners in Europe SRL, Italien",
-        description: "WordPress, Plugins und Wartung.",
+        period: "11/2022 – 02/2023",
+        role: "Web Developer — Praktikum (Remote)",
+        company: "Europe SRL — Rom",
+        description:
+          "Mitarbeit an PHP-/JS-Webanwendungen sowie Backend- und API-nahen Aufgaben.",
       },
       {
-        period: "2021",
-        role: "Web- & Grafikdesigner",
-        company: "Focus Production, Türkei",
-        description: "Websites, Branding und UI/UX.",
-      },
-      {
-        period: "2019",
-        role: "Web- & Grafikdesigner",
-        company: "Zero Production, Türkei",
-        description: "Webdesign, Grafik und visuelle Identität.",
+        period: "2022 – 2023",
+        role: "Full Stack Webentwickler",
+        company: "AFPA Institut, Frankreich",
+        description: "Ausbildung in moderner Full-Stack-Webentwicklung.",
       },
     ],
   },
@@ -215,35 +252,40 @@ const de: Messages = {
     title: "Technologien &",
     titleAccent: "Kompetenzen",
     subtitle:
-      "Stack und Methoden, mit denen ich im Alltag produktiv arbeite — erweiterbar je nach Team-Setup.",
+      "Stack, mit dem ich skalierbare Webanwendungen, APIs und Mobile-Apps umsetze.",
     categories: {
       frontend: "Frontend",
       backend: "Backend",
       databases: "Datenbanken",
-      cmsDevops: "CMS & DevOps",
-      design: "Design & UX",
-      mobile: "Mobile & Web",
+      cmsDevops: "Tools",
+      design: "Qualität",
+      mobile: "Mobile",
     },
     extrasTitle: "Weitere",
     extrasTitleAccent: "Skills",
     extras: [
-      "Agile / Scrum",
+      "Agile Teams",
+      "MVC",
       "Clean Code",
-      "SEO",
       "Performance",
-      "API-Integration",
-      "Git",
-      "Testing & Debugging",
-      "Responsive Design",
-      "Barrierefreiheit",
+      "Authentifizierung",
+      "Git & GitHub",
+      "Composer",
+      "npm",
+      "Vercel",
       "Deployment",
     ],
+    levels: {
+      production: "Produktion",
+      daily: "Täglich",
+      familiar: "Vertraut",
+    },
   },
   projects: {
     title: "Ausgewählte",
     titleAccent: "Arbeiten",
     subtitle:
-      "Einblicke in Projekte aus Fullstack-Entwicklung, WordPress und modernen Frontends — als Referenz für meine Arbeitsweise.",
+      "Einblicke in Laravel-Backends, Serviceportale, Mobile-Apps und moderne Frontends — als Referenz für meine Arbeitsweise.",
     categories: {
       all: "Alle",
       nextjs: "Next.js",
@@ -265,18 +307,36 @@ const de: Messages = {
     modalNext: "Nächstes Bild",
     modalImage: "Bild",
     modalDot: "Zu Bild wechseln",
+    caseStudyLabel: "Case Study",
+    viewCaseStudy: "Case Study lesen",
+    backToProjects: "Zurück zu den Projekten",
+    caseStudyProblem: "Ausgangslage",
+    caseStudySolution: "Lösung",
+    caseStudyRole: "Meine Rolle",
+    caseStudyHighlights: "Highlights",
+    caseStudyChallenges: "Herausforderungen",
+    caseStudyGallery: "Weitere Screenshots",
+    apiDocs: "API-Dokumentation",
+    archiveTitle: "Weitere",
+    archiveSubtitle: "Projekte",
+    archiveSubtitleText:
+      "Frühere Landing Pages und UI-Übungen — ergänzend zur Hauptarbeit.",
+    showArchive: "Archiv anzeigen",
+    hideArchive: "Archiv ausblenden",
   },
   contact: {
     title: "Kontakt",
     titleAccent: "aufnehmen",
     subtitle:
-      "Recruiter:innen und Teams: Schreiben Sie mir gern — ich antworte in der Regel innerhalb von 24 Stunden.",
+      "Recruiter:innen und Teams im Raum Meppen & Emsland: Schreiben Sie mir gern — ich antworte in der Regel innerhalb von 24 Stunden.",
     email: "E-Mail",
+    phone: "Telefon",
     location: "Standort",
+    cvDownload: "Lebenslauf herunterladen",
     social: "Profile",
     availabilityTitle: "Verfügbarkeit",
     availabilityText:
-      "Ich suche eine Festanstellung (Remote deutschlandweit oder Hybrid im Raum Niedersachsen/NRW).",
+      "Ich suche eine Fullstack- oder Backend-orientierte Position im Raum Meppen & Emsland. Reisebereit in DE, Führerschein B, eigenes Fahrzeug.",
     formTitle: "Nachricht senden",
     name: "Name",
     emailLabel: "E-Mail",
@@ -299,30 +359,56 @@ const de: Messages = {
     autoresponseThanks: "Vielen Dank für Ihre Nachricht",
     autoresponseReceived: "Ich habe Ihre Nachricht erhalten und melde mich schnellstmöglich.",
     autoresponseClosing: "Mit freundlichen Grüßen",
-    autoresponseSignature: "Jumaa Almarzouk — Fullstack-Webentwickler",
+    autoresponseSignature: "Jumaa Almarzouk — Fullstack Web & Mobile Developer",
   },
   footer: {
     tagline:
-      "Fullstack-Webentwickler — Stellensuche. Fokus auf Laravel, PHP, MySQL, React und Next.js.",
+      "Fullstack Web & Mobile Developer — Stellensuche. Laravel, PHP, React, Next.js, Vue.js und React Native.",
     navTitle: "Navigation",
     contactTitle: "Kontakt",
     builtWith: "Erstellt mit",
     impressum: "Impressum",
     privacy: "Datenschutz",
   },
+  openToWork: {
+    badge: "Verfügbar für Festanstellung",
+    title: "Offen für",
+    titleAccent: "Fullstack & Backend",
+    subtitle:
+      "Ich suche eine langfristige Position im Raum Meppen & Emsland — mit Fokus auf Laravel, APIs und moderne Frontends.",
+    ctaContact: "Jetzt kontaktieren",
+    items: [
+      {
+        title: "Fullstack / Backend",
+        description: "PHP, Laravel, REST APIs, React, Next.js, Vue.js",
+      },
+      {
+        title: "Raum Meppen & Emsland",
+        description: "Haselünne · vor Ort, hybrid oder remote (DE)",
+      },
+      {
+        title: "Mobilität",
+        description: "Führerschein B · eigenes Fahrzeug · reisebereit",
+      },
+      {
+        title: "Sofort verfügbar",
+        description: "Festanstellung · agile Teams · langfristige Mitwirkung",
+      },
+    ],
+  },
   jsonLd: {
     personDescription:
-      "Fullstack-Webentwickler sucht Festanstellung; React, Next.js, WordPress, Deutschland.",
+      "Fullstack Web & Mobile Developer sucht Fullstack-/Backend-Position im Raum Meppen und Emsland. PHP, Laravel, React, Next.js, Vue.js, React Native.",
     websiteDescription: "Persönliche Website und Portfolio von Jumaa Almarzouk.",
-    jobTitle: "Fullstack Web Developer",
+    jobTitle: "Fullstack Web & Mobile Developer",
   },
 };
 
 const en: Messages = {
   meta: {
-    title: "Jumaa Almarzouk | Full-stack Web Developer — Open to work",
+    title: "Jumaa Almarzouk | Full-stack Web & Mobile Developer — Open to work",
     description:
-      "Full-stack developer (React, Next.js, WordPress) seeking full-time employment in Germany. Based in Haselünne — remote or hybrid.",
+      "Full-stack web & mobile developer (PHP, Laravel, React, Next.js, Vue.js, React Native) seeking a full-stack / backend role in the Meppen & Emsland area. Based in Haselünne.",
   },
   nav: {
     home: "Home",
@@ -334,79 +420,85 @@ const en: Messages = {
     ctaContact: "Get in touch",
   },
   hero: {
-    badge: "Open to full-time roles",
+    badge: "Open to work · Meppen & Emsland area",
     greeting: "Hi, I'm",
-    roleLine: "Full-stack",
-    roleHighlight: "Web Developer",
-    techTags: ["Laravel", "PHP", "MySQL", "React", "Next.js"],
-    bio: "I ship reliable, fast web products — backend with Laravel/PHP & MySQL, frontend with React and Next.js. Looking for a team where I can grow long term.",
+    roleLine: "Full-stack Web & Mobile",
+    roleHighlight: "Developer",
+    techTags: ["PHP", "Laravel", "React", "Next.js", "Vue.js", "React Native"],
+    bio: "Full-stack development with a backend focus (PHP, Laravel) plus modern frontends and mobile apps (Next.js, React, Vue.js, React Native). Looking for a full-stack or backend-oriented role in the Meppen & Emsland area.",
     ctaProjects: "Selected work",
     ctaContact: "Contact (hiring)",
     cvDownload: "Résumé (PDF)",
-    expBadge: "5+ years experience",
-    projectsBadge: "20+ projects",
+    expBadge: "Laravel · Mobile",
+    projectsBadge: "Web & apps",
   },
   about: {
     title: "About",
     titleAccent: "me",
-    locationLine: "Haselünne, Emsland · Germany",
+    locationLine: "Haselünne (Meppen / Emsland area) · Germany",
     bio1:
-      "I'm a full-stack web developer focused on clean code, performance, and clear collaboration.",
+      "Full-stack web & mobile developer with a backend focus (PHP, Laravel) and modern frontend and mobile technologies (Next.js, React, Vue.js, React Native).",
     bio2:
-      "My backend stack is Laravel/PHP with MySQL, paired with React, Next.js, and Tailwind on the frontend. I take features from API to UI in production — a good fit for product or agency teams.",
+      "Experience building scalable web apps, REST APIs, authentication, database design, and cross-platform mobile apps. Structured, solution-oriented, and used to agile teams.",
     highlights: [
       {
         title: "Full-stack",
-        description: "Modern frontends and solid APIs & backends",
+        description: "Laravel backends, REST APIs, and modern frontends",
       },
       {
-        title: "Experience",
-        description: "WordPress, themes, performance, teamwork",
+        title: "Mobile",
+        description: "Cross-platform apps with React Native",
       },
       {
-        title: "Learning",
-        description: "Continuously leveling up on web best practices",
+        title: "Education",
+        description: "Full-stack web developer — AFPA, France",
       },
       {
         title: "Languages",
-        description: "German (B1) · English (B2) · Arabic (native)",
+        description:
+          "Arabic (native) · German (B1) · English (B2) · French (B1)",
       },
+    ],
+    facts: [
+      "German B1",
+      "English B2",
+      "French B1",
+      "Arabic native",
+      "Driving licence B",
+      "Own vehicle",
+      "Willing to travel (DE)",
     ],
     timelineTitle: "Career",
     timelineTitleAccent: "timeline",
     currentLabel: "Current",
     timeline: [
       {
-        period: "2024 – present",
-        role: "WordPress & frontend developer",
-        company: "Eilinghoff + Team GmbH, Germany",
+        period: "04/2026 – present",
+        role: "Full-stack web developer (Laravel, Next.js, React, Vue.js, React Native)",
+        company: "Dream Soft GmbH — Haselünne",
         description:
-          "WordPress sites, theme development, performance, and frontend delivery for client projects.",
+          "Full-stack development with Laravel (backend) plus Next.js, React, and Vue.js (frontend). Building a digital service portal to track production and service workflows. Cross-platform mobile apps with React Native — sole full-stack developer on the project.",
         current: true,
       },
       {
-        period: "2023",
-        role: "Diploma — front- & back-end development",
-        company: "AFPA, France",
-        description: "Intensive training in modern web development.",
+        period: "06/2024 – 03/2026",
+        role: "Full-stack web developer (PHP / Laravel focus)",
+        company: "Eilinghoff + Team — Rheine",
+        description:
+          "Backend development with PHP & Laravel: REST APIs, business logic, MySQL & Eloquent, performance work, and MVC structure. Agile teamwork and deployment.",
       },
       {
-        period: "2022",
-        role: "Internship — WordPress developer",
-        company: "Foreigners in Europe SRL, Italy",
-        description: "WordPress, plugins, and maintenance.",
+        period: "11/2022 – 02/2023",
+        role: "Web developer — internship (remote)",
+        company: "Europe SRL — Rome",
+        description:
+          "Contributed to PHP/JS web applications and backend/API-related work.",
       },
       {
-        period: "2021",
-        role: "Web & graphic designer",
-        company: "Focus Production, Turkey",
-        description: "Websites, branding, and UI/UX.",
-      },
-      {
-        period: "2019",
-        role: "Web & graphic designer",
-        company: "Zero Production, Turkey",
-        description: "Web design, graphics, and visual identity.",
+        period: "2022 – 2023",
+        role: "Full-stack web developer training",
+        company: "AFPA Institute, France",
+        description: "Training in modern full-stack web development.",
       },
     ],
   },
@@ -414,35 +506,40 @@ const en: Messages = {
     title: "Tech &",
     titleAccent: "skills",
     subtitle:
-      "Tools and practices I use day to day — adaptable to your team’s stack.",
+      "The stack I use to ship scalable web apps, APIs, and mobile products.",
     categories: {
       frontend: "Frontend",
       backend: "Backend",
       databases: "Databases",
-      cmsDevops: "CMS & DevOps",
-      design: "Design & UX",
-      mobile: "Mobile & Web",
+      cmsDevops: "Tools",
+      design: "Quality",
+      mobile: "Mobile",
     },
     extrasTitle: "Also",
     extrasTitleAccent: "comfortable with",
     extras: [
-      "Agile / Scrum",
+      "Agile teams",
+      "MVC",
       "Clean code",
-      "SEO",
       "Performance",
-      "API integration",
-      "Git",
-      "Testing & debugging",
-      "Responsive design",
-      "Accessibility",
+      "Authentication",
+      "Git & GitHub",
+      "Composer",
+      "npm",
+      "Vercel",
       "Deployment",
     ],
+    levels: {
+      production: "Production",
+      daily: "Daily",
+      familiar: "Familiar",
+    },
   },
   projects: {
     title: "Selected",
     titleAccent: "work",
     subtitle:
-      "A sample of full-stack, WordPress, and frontend work — to illustrate how I ship.",
+      "A sample of Laravel backends, service portals, mobile apps, and modern frontends — to illustrate how I ship.",
     categories: {
       all: "All",
       nextjs: "Next.js",
@@ -464,18 +561,36 @@ const en: Messages = {
     modalNext: "Next image",
     modalImage: "Image",
     modalDot: "Go to image",
+    caseStudyLabel: "Case study",
+    viewCaseStudy: "Read case study",
+    backToProjects: "Back to projects",
+    caseStudyProblem: "Problem",
+    caseStudySolution: "Solution",
+    caseStudyRole: "My role",
+    caseStudyHighlights: "Highlights",
+    caseStudyChallenges: "Challenges",
+    caseStudyGallery: "More screenshots",
+    apiDocs: "API documentation",
+    archiveTitle: "More",
+    archiveSubtitle: "projects",
+    archiveSubtitleText:
+      "Earlier landing pages and UI exercises — supplementary to core work.",
+    showArchive: "Show archive",
+    hideArchive: "Hide archive",
   },
   contact: {
     title: "Get in",
     titleAccent: "touch",
     subtitle:
-      "Recruiters and hiring teams: message me — I usually reply within 24 hours.",
+      "Recruiters and teams in the Meppen & Emsland area: message me — I usually reply within 24 hours.",
     email: "Email",
+    phone: "Phone",
     location: "Location",
+    cvDownload: "Download résumé",
     social: "Profiles",
     availabilityTitle: "Availability",
     availabilityText:
-      "I'm looking for full-time employment (remote across Germany or hybrid in Lower Saxony/NRW).",
+      "I'm looking for a full-stack or backend-oriented role in the Meppen & Emsland area. Willing to travel in Germany, driving licence B, own vehicle.",
     formTitle: "Send a message",
     name: "Name",
     emailLabel: "Email",
@@ -498,22 +613,48 @@ const en: Messages = {
     autoresponseThanks: "Thank you for your message",
     autoresponseReceived: "I've received it and will get back to you as soon as I can.",
     autoresponseClosing: "Best regards",
-    autoresponseSignature: "Jumaa Almarzouk — Full-stack web developer",
+    autoresponseSignature: "Jumaa Almarzouk — Full-stack web & mobile developer",
   },
   footer: {
     tagline:
-      "Full-stack web developer — open to work. Focus on Laravel, PHP, MySQL, React, and Next.js.",
+      "Full-stack web & mobile developer — open to work. Laravel, PHP, React, Next.js, Vue.js, and React Native.",
     navTitle: "Navigation",
     contactTitle: "Contact",
     builtWith: "Built with",
     impressum: "Legal notice",
     privacy: "Privacy",
   },
+  openToWork: {
+    badge: "Open to full-time roles",
+    title: "Open to",
+    titleAccent: "full-stack & backend",
+    subtitle:
+      "I'm looking for a long-term role in the Meppen & Emsland area — focused on Laravel, APIs, and modern frontends.",
+    ctaContact: "Contact me",
+    items: [
+      {
+        title: "Full-stack / backend",
+        description: "PHP, Laravel, REST APIs, React, Next.js, Vue.js",
+      },
+      {
+        title: "Meppen & Emsland area",
+        description: "Haselünne · on-site, hybrid, or remote (Germany)",
+      },
+      {
+        title: "Mobility",
+        description: "Driving licence B · own vehicle · willing to travel",
+      },
+      {
+        title: "Available now",
+        description: "Full-time · agile teams · long-term contribution",
+      },
+    ],
+  },
   jsonLd: {
     personDescription:
-      "Full-stack web developer seeking full-time work; React, Next.js, WordPress, Germany.",
+      "Full-stack web & mobile developer seeking a full-stack / backend role in the Meppen and Emsland area. PHP, Laravel, React, Next.js, Vue.js, React Native.",
     websiteDescription: "Personal website and portfolio of Jumaa Almarzouk.",
-    jobTitle: "Fullstack Web Developer",
+    jobTitle: "Fullstack Web & Mobile Developer",
   },
 };
 

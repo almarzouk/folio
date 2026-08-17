@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import Hero from "@/components/hero";
+import OpenToWork from "@/components/open-to-work";
 import TechStack from "@/components/tech-stack";
 import About from "@/components/about";
 import Skills from "@/components/skills";
@@ -15,6 +16,7 @@ export default function Home() {
       <WebsiteSchema />
       <Header />
       <Hero />
+      <OpenToWork />
       <TechStack />
       <About />
       <Skills />

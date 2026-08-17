@@ -12,11 +12,17 @@ import {
   X,
   Star,
   LayoutGrid,
+  FileText,
+  BookOpen,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/components/i18n-provider";
+import { withLocale } from "@/lib/i18n/paths";
 import {
   portfolioProjects,
+  getVisibleProjects,
+  getArchivedProjects,
   projectCopy,
   type ProjectCategoryKey,
   type PortfolioProject,
@@ -224,6 +230,10 @@ function FeaturedPreviewPanel({
   openModal: (images: string[], index: number, title: string) => void;
 }) {
   const copy = projectCopy(project, locale);
+  const caseStudyHref = project.hasCaseStudy
+    ? withLocale(locale, `/projects/${project.id}`)
+    : null;
+
   return (
     <div className="flex h-full min-h-[280px] flex-col lg:min-h-[360px]">
       <div className="relative min-h-[200px] flex-1 lg:min-h-0">
@@ -260,6 +270,14 @@ function FeaturedPreviewPanel({
           ))}
         </div>
         <div className="flex flex-wrap gap-2 pt-1">
+          {caseStudyHref && (
+            <Button size="sm" asChild className="rounded-lg btn-primary">
+              <Link href={caseStudyHref}>
+                <BookOpen className="mr-2 h-4 w-4" />
+                {projectsMessages.viewCaseStudy}
+              </Link>
+            </Button>
+          )}
           {project.github !== "#" && (
             <Button variant="outline" size="sm" asChild className="rounded-lg">
               <Link
@@ -272,8 +290,20 @@ function FeaturedPreviewPanel({
               </Link>
             </Button>
           )}
+          {project.docs && (
+            <Button variant="outline" size="sm" asChild className="rounded-lg">
+              <Link
+                href={project.docs}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                {projectsMessages.apiDocs}
+              </Link>
+            </Button>
+          )}
           {project.live !== "#" && (
-            <Button size="sm" asChild className="rounded-lg btn-primary">
+            <Button size="sm" variant="outline" asChild className="rounded-lg">
               <Link
                 href={project.live}
                 target="_blank"
@@ -299,6 +329,10 @@ export default function Projects() {
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [modalIndex, setModalIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
+  const [showArchive, setShowArchive] = useState(false);
+
+  const visibleProjects = useMemo(() => getVisibleProjects(), []);
+  const archivedProjects = useMemo(() => getArchivedProjects(), []);
 
   const modalLabels = useMemo(
     () => ({
@@ -343,11 +377,9 @@ export default function Projects() {
   };
 
   const filteredProjects = useMemo(() => {
-    if (selectedCategory === "all") return portfolioProjects;
-    return portfolioProjects.filter(
-      (p) => p.categoryKey === selectedCategory
-    );
-  }, [selectedCategory]);
+    if (selectedCategory === "all") return visibleProjects;
+    return visibleProjects.filter((p) => p.categoryKey === selectedCategory);
+  }, [selectedCategory, visibleProjects]);
 
   const featuredProjects = useMemo(
     () => portfolioProjects.filter((p) => p.featured),
@@ -690,12 +722,84 @@ export default function Projects() {
                             </span>
                           )}
                         </div>
+                        {project.hasCaseStudy && (
+                          <Link
+                            href={withLocale(locale, `/projects/${project.id}`)}
+                            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                          >
+                            <BookOpen className="h-3.5 w-3.5" />
+                            {m.projects.viewCaseStudy}
+                          </Link>
+                        )}
                       </div>
                     </motion.div>
                   );
                 })}
             </div>
           </div>
+
+          {selectedCategory === "all" && archivedProjects.length > 0 && (
+            <div className="mt-14">
+              <button
+                type="button"
+                onClick={() => setShowArchive((v) => !v)}
+                className="mx-auto flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold transition-colors hover:border-primary/40 hover:text-primary"
+              >
+                {showArchive ? m.projects.hideArchive : m.projects.showArchive}
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 transition-transform",
+                    showArchive && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {showArchive && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-8"
+                >
+                  <h3 className="mb-2 text-center text-lg font-bold">
+                    {m.projects.archiveTitle}{" "}
+                    <span className="text-primary">
+                      {m.projects.archiveSubtitle}
+                    </span>
+                  </h3>
+                  <p className="mb-6 text-center text-sm text-muted-foreground">
+                    {m.projects.archiveSubtitleText}
+                  </p>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {archivedProjects.map((project) => {
+                      const copy = projectCopy(project, locale);
+                      return (
+                        <div
+                          key={project.id}
+                          className="glass-card flex flex-col gap-3 rounded-xl border border-border p-4"
+                        >
+                          <h4 className="font-semibold">{copy.title}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {copy.description}
+                          </p>
+                          {project.live !== "#" && (
+                            <Link
+                              href={project.live}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                              {m.projects.liveDemo}
+                            </Link>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}

@@ -8,6 +8,7 @@ import {
   Linkedin,
   Mail,
   MapPin,
+  Phone,
   Rocket,
   Sparkles,
   Zap,
@@ -17,6 +18,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useI18n } from "@/components/i18n-provider";
 import { withLocale } from "@/lib/i18n/paths";
+import { SITE } from "@/lib/site";
 
 const containerVariants = {
   hidden: {},
@@ -168,7 +170,7 @@ export default function Hero() {
                 asChild
                 className="w-full rounded-xl border-2 px-6 transition-transform hover:scale-[1.02] active:scale-100 sm:w-auto"
               >
-                <a href="/cv/Jumaa-Almarzouk-CV.pdf" download>
+                <a href={SITE.cvPath} download>
                   <Download className="mr-2 h-4 w-4" />
                   {m.hero.cvDownload}
                 </a>
@@ -181,19 +183,24 @@ export default function Hero() {
             >
               {[
                 {
-                  href: "https://github.com/almarzouk",
+                  href: SITE.github,
                   icon: Github,
                   label: "GitHub",
                 },
                 {
-                  href: "https://linkedin.com/in/almarzouk",
+                  href: SITE.linkedin,
                   icon: Linkedin,
                   label: "LinkedIn",
                 },
                 {
-                  href: "mailto:jumaa.almarzouk@gmail.com",
+                  href: `mailto:${SITE.email}`,
                   icon: Mail,
                   label: "E-Mail",
+                },
+                {
+                  href: SITE.phoneHref,
+                  icon: Phone,
+                  label: SITE.phoneDisplay,
                 },
               ].map(({ href, icon: Icon, label }) => (
                 <Link
@@ -211,7 +218,7 @@ export default function Hero() {
               ))}
               <span className="inline-flex items-center gap-1.5 pl-1 text-sm text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5 text-primary/70" />
-                Haselünne, DE
+                {SITE.locationLine}
               </span>
             </motion.div>
           </motion.div>

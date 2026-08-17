@@ -15,11 +15,11 @@ const techs: Tech[] = [
   { name: "MySQL", color: "#00758F", letter: "M" },
   { name: "Next.js", color: "#0F172A", letter: "N" },
   { name: "React", color: "#06B6D4", letter: "R" },
-  { name: "TypeScript", color: "#3178C6", letter: "T" },
+  { name: "Vue.js", color: "#42B883", letter: "V" },
+  { name: "React Native", color: "#61DAFB", letter: "R" },
   { name: "Tailwind", color: "#0EA5E9", letter: "T" },
   { name: "Node.js", color: "#16A34A", letter: "N" },
-  { name: "WordPress", color: "#1E40AF", letter: "W" },
-  { name: "Docker", color: "#2496ED", letter: "D" },
+  { name: "Vercel", color: "#111827", letter: "V" },
 ];
 
 const labels = {
